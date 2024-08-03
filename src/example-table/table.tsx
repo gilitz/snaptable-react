@@ -47,15 +47,13 @@ const Cell = css`
 
 const TableCss = css`
 	.table-class {	
-		background-color: var(--color-container-background);
+		background-color: #202020;
 	}	
 `;
 
 const TableContainerClass = css`
 	&.table-container-class {	
 		border: 1px solid #333333;;
-		/* border-top-right-radius: var(--border-radius-default);
-		border-top-left-radius: var(--border-radius-default); */
 	}	
 `;
 
