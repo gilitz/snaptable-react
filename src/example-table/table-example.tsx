@@ -1,6 +1,5 @@
 import { useDataTable } from "../hooks/use-data-table";
 import { Table } from "./table";
-// import { Table as SmartTable } from '../table/table';
 
 export const TableExample = (() => {
 	const dataTable = useDataTable({ key: 'gilitz-table', columns: tableColumns, saveLayoutView: true })
