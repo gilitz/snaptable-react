@@ -124,14 +124,14 @@ The `SnapTable` component accepts the following props:
 
 - **data** (array): Array of items, where each item must have a key.
 - **dataModel** (object): The data model returned from the `useDataTable` hook.
-- **tableContainerClass?** (string): classname to change table-container(div) element's css style
-- **tableClass?** (string): classname to change <table> element's css style
-- **bodyClass?** (string): classname to change <body> element's css style
-- **headerRowClass?** (string): classname to change header-row <tr> element's css style
-- **rowClass?** (string): classname to change row <tr> element's css style
-- **headerCellClass?** (string): classname to change header-cell <th> element's css style
-- **cellClass?** (string): classname to change cell <td> element's css style
-- **cellClass?** (string): classname to change cell <td> element's css style
+- **tableContainerClass?** (string): classname to change table-container (div) element's css style
+- **tableClass?** (string): classname to change (table) element's css style
+- **bodyClass?** (string): classname to change (body) element's css style
+- **headerRowClass?** (string): classname to change header-row (tr) element's css style
+- **rowClass?** (string): classname to change row (tr) element's css style
+- **headerCellClass?** (string): classname to change header-cell (th) element's css style
+- **cellClass?** (string): classname to change cell (td) element's css style
+- **cellClass?** (string): classname to change cell (td) element's css style
 
 
 ## Working Example: 
