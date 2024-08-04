@@ -8,6 +8,8 @@
 - **Resizable Columns**: Adjust the width of columns by dragging the edges (unless a fixed width is set).
 - **Persistent Layout Views**: Save the table layout so it persists after a page refresh.
 
+<br />
+<br />
 ## Installation
 
 Install the package using npm or yarn:
