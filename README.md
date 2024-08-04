@@ -133,6 +133,13 @@ The `SnapTable` component accepts the following props:
 - **cellClass?** (string): classname to change cell (td) element's css style
 
 
+### SnapTableType
+
+The `SnapTableType` Type is for typescript usage
+
+
+
+
 ## Working Example: 
 
 just clone, run ```npm install``` and then ```npm run dev``` 
