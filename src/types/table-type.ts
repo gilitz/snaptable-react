@@ -2,13 +2,15 @@ import { DataTableType } from "../models/data-table-model";
 
 export type SnapTableType = {
 	dataTable: DataTableType;
-	data: any[];
+	data: unknown[];
+	tableContainerClass?: string;
+	tableClass?: string;
 	bodyClass?: string;
 	headerRowClass?: string;
 	rowClass?: string;
 	headerCellClass?: string;
-	tableClass?: string;
-	tableContainerClass?: string;
+	cellClass?: string;
+
 };
 
 export default SnapTableType;

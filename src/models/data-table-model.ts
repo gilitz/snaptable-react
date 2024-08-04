@@ -50,7 +50,7 @@ class DataTable {
 
 		// load initial view if exists
 		if (saveLayoutView) {
-			if (Boolean(savedColumns)) {
+			if (savedColumns) {
 				this.columns = savedColumns.reduce((result: TableColumnType[], savedColumn: ColumnWidthType) => {
 					const currentColumn = columns.find(({ key }) => key === savedColumn.key)
 					if (!currentColumn) {
