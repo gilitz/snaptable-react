@@ -1,20 +1,9 @@
 import { TableLayout } from "./table-layout";
-import { DataTableType, TableColumnType } from "../models/data-table-model";
+import { TableColumnType } from "../models/data-table-model";
 import useDragAndDrop from "../hooks/use-drag-drop";
+import { SnapTableType } from "../types/table-type";
 
-export type TableProps = {
-	dataTable: DataTableType;
-	data: any[];
-	bodyClass?: string;
-	headerRowClass?: string;
-	rowClass?: string;
-	cellClass?: string;
-	headerCellClass?: string;
-	tableClass?: string;
-	tableContainerClass?: string;
-}
-
-export const Table = (({
+export const SnapTable = (({
 	dataTable,
 	data,
 	bodyClass,
@@ -24,7 +13,7 @@ export const Table = (({
 	headerRowClass,
 	tableClass,
 	tableContainerClass,
-	...props }: TableProps) => {
+	...props }: SnapTableType) => {
 	const { draggedIndex, hoveredIndex, onDragStart, onDragOver, onDrop } = useDragAndDrop();
 	return (
 		<TableLayout {...props} tableContainerClass={tableContainerClass} tableClass={tableClass}>
@@ -68,4 +57,4 @@ export const Table = (({
 	return value ?? '';
 };
 
-export default Table;
+export default SnapTable;

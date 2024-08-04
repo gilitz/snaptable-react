@@ -1,4 +1,6 @@
+// @ts-expect-error
 import React from 'react'
+// @ts-expect-error
 import ReactDOM from 'react-dom/client'
 import App from './App';
 import './index.css'

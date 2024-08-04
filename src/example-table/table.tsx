@@ -1,7 +1,8 @@
-import { Table as SmartTable, TableProps } from "../table/table";
 import { ReactNode } from "react";
 // @ts-expect-error
 import styled, { css, StyledComponent } from 'styled-components';
+import { SnapTable } from "../table/table";
+import { SnapTableType } from "../types/table-type";
 
 const Header = css`
 	.header-cell-class {
@@ -63,10 +64,10 @@ const Td: StyledComponent<'td', any, {}, never> = styled.td`
 	border: 1px solid var(--color-gray-80);
 `;
 
-export const Table: React.FC<{ children?: ReactNode } & TableProps> & {
+export const Table: React.FC<{ children?: ReactNode } & SnapTableType> & {
 	Cell: typeof Td;
 } = styled((props: any) => {
-	return <SmartTable {...props} tableContainerClass="table-container-class" tableClass='table-class' cellClass='cell-class' headerCellClass='header-cell-class' />
+	return <SnapTable {...props} tableContainerClass="table-container-class" tableClass='table-class' cellClass='cell-class' headerCellClass='header-cell-class' />
 })`
 	${TableContainerClass};
 	${TableCss};

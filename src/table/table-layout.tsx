@@ -4,7 +4,7 @@ import styled, { StyledComponent } from 'styled-components';
 import { DataTableType } from '../models/data-table-model';
 import { useResizeObserver } from '../hooks/use-resize-observer';
 
-type TableProps = {
+type TableLayoutType = {
 	children?: React.ReactNode;
 	className?: string;
 	tableClass?: string;
@@ -114,7 +114,7 @@ const Thead: StyledComponent<'thead', any, StyledTableTheadProps, never> = style
 
 const Footer: StyledComponent<'tfoot', any, StyledTableTheadProps, never> = styled.tfoot``;
 
-export const TableLayout: React.FC<TableProps> & {
+export const TableLayout: React.FC<TableLayoutType> & {
 	Row: typeof Tr;
 	Header: typeof Th;
 	Thead: typeof Thead;
