@@ -131,7 +131,7 @@ The `SnapTable` component accepts the following props:
 - **rowClass?** (string): classname to change row <tr> element's css style
 - **headerCellClass?** (string): classname to change header-cell <th> element's css style
 - **cellClass?** (string): classname to change cell <td> element's css style
-
+- **cellClass?** (string): classname to change cell <td> element's css style
 
 
 ## Working Example: 
