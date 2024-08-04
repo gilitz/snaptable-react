@@ -26,13 +26,13 @@ Below is a basic example of how to use snaptable-react to create a custom table.
 
 #### Note
 snaptable-react does not come with any CSS. You are free to style your table as you like using your own CSS.
-#### Import the SnapTable Component and useDataTable Hook
+### Import the SnapTable Component and useDataTable Hook
 
 ```
 import { SnapTable, useDataTable, SnapTableType } from 'snaptable-react';
 ```
 
-#### Define Your Columns Structure
+### Define Your Columns Structure
 Each column should have the following properties: key, label, Cell, and optionally resizable and width.
 ```
 const columns = [
@@ -43,7 +43,7 @@ const columns = [
 ];
 ```
 
-#### Use the useDataTable Hook
+### Use the useDataTable Hook
 Pass the columns and table properties to the useDataTable hook.
 
 ```
@@ -55,7 +55,7 @@ const dataModel = useDataTable({
 });
 ```
 
-#### Create Your Custom Table Component
+### Create Your Custom Table Component
 Wrap the SnapTable component, adding your own CSS to style the table.
 
 ```
@@ -77,7 +77,7 @@ const StyledTable = (props) => {
 ...
 ```
 
-#### Putting it all together
+### Putting it all together
 Now you have your own styled table, and you can create as many tables as you want like this:
 
 ```
@@ -130,7 +130,6 @@ The `SnapTable` component accepts the following props:
 - **headerRowClass?** (string): classname to change header-row (tr) element's css style
 - **rowClass?** (string): classname to change row (tr) element's css style
 - **headerCellClass?** (string): classname to change header-cell (th) element's css style
-- **cellClass?** (string): classname to change cell (td) element's css style
 - **cellClass?** (string): classname to change cell (td) element's css style
 
 
