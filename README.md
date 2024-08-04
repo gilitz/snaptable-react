@@ -164,4 +164,5 @@ just clone repo, run ```npm install``` and then ```npm run dev```
 <br />
 <br />
 
-# Enjoy using and feel free to contact me for any question, suggestion or just a small talk :)
+# Enjoy 
+### using and feel free to contact me for any question, suggestion or just a small talk :)
