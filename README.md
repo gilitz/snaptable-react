@@ -159,4 +159,9 @@ The `SnapTableType` Type is for typescript usage
 
 ## Working Example: 
 
-just clone, run ```npm install``` and then ```npm run dev``` 
+just clone repo, run ```npm install``` and then ```npm run dev``` 
+
+<br />
+<br />
+
+# Enjoy using and feel free to contact me for any question, suggestion or just a small talk :)
