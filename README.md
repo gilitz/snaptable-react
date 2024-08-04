@@ -24,7 +24,7 @@ yarn add snaptable-react
 
 Below is a basic example of how to use snaptable-react to create a custom table.
 
-##### Note
+#### Note
 snaptable-react does not come with any CSS. You are free to style your table as you like using your own CSS.
 #### Import the SnapTable Component and useDataTable Hook
 
