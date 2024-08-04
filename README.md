@@ -133,7 +133,7 @@ The `SnapTable` component accepts the following props:
 - **cellClass?** (string): classname to change cell <td> element's css style
 
 
+
 ## Working Example: 
-https://github.com/gilitz/snaptable-react
 
 just clone, run ```npm install``` and then ```npm run dev``` 
