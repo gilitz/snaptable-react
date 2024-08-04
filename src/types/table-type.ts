@@ -6,7 +6,6 @@ export type SnapTableType = {
 	bodyClass?: string;
 	headerRowClass?: string;
 	rowClass?: string;
-	cellClass?: string;
 	headerCellClass?: string;
 	tableClass?: string;
 	tableContainerClass?: string;
