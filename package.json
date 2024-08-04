@@ -1,8 +1,8 @@
 {
   "name": "snaptable-react",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "type": "module",
-  "main": "dist/index.js",
+  "main": "dist/index.ts",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
