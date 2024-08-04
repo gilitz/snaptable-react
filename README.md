@@ -9,7 +9,7 @@
 - **Persistent Layout Views**: Save the table layout so it persists after a page refresh.
 
 <br />
-<br />
+
 ## Installation
 
 Install the package using npm or yarn:
@@ -20,6 +20,8 @@ npm install snaptable-react
 yarn add snaptable-react
 ```
 
+<br />
+
 # Usage
 
 ## Basic Example
@@ -28,11 +30,16 @@ Below is a basic example of how to use snaptable-react to create a custom table.
 
 #### Note
 snaptable-react does not come with any CSS. You are free to style your table as you like using your own CSS.
+
+<br />
+
 ### Import the SnapTable Component and useDataTable Hook
 
 ```
 import { SnapTable, useDataTable, SnapTableType } from 'snaptable-react';
 ```
+
+<br />
 
 ### Define Your Columns Structure
 Each column should have the following properties: key, label, Cell, and optionally resizable and width.
@@ -45,6 +52,8 @@ const columns = [
 ];
 ```
 
+<br />
+
 ### Use the useDataTable Hook
 Pass the columns and table properties to the useDataTable hook.
 
@@ -56,6 +65,8 @@ const dataModel = useDataTable({
   saveLayoutView?: true, // Enable/Disable saving the layout view (default false)
 });
 ```
+
+<br />
 
 ### Create Your Custom Table Component
 Wrap the SnapTable component, adding your own CSS to style the table.
@@ -78,6 +89,8 @@ const StyledTable = (props) => {
 
 ...
 ```
+
+<br />
 
 ### Putting it all together
 Now you have your own styled table, and you can create as many tables as you want like this:
@@ -106,6 +119,8 @@ const TableExample = (() => {
 	)
 });
 ```
+
+<br />
 
 ## Props
 
@@ -139,8 +154,8 @@ The `SnapTable` component accepts the following props:
 
 The `SnapTableType` Type is for typescript usage
 
-
-
+<br />
+<br />
 
 ## Working Example: 
 
