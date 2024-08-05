@@ -132,6 +132,7 @@ The `useDataTable` hook accepts an object with the following properties:
 - **columns** (array): Array of column definitions.
 - **hasDraggableColumns** (boolean): Enable/Disable drag-and-drop columns.
 - **saveLayoutView** (boolean): Enable/Disable saving the layout view.
+- **isStickyHeader** (boolean): Enable/Disable sticky header in table.
 
 
 
