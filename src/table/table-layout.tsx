@@ -35,8 +35,8 @@ const StyledTable: StyledComponent<'table', any, StyledTableProps, never> = styl
 
 const TableContainer = styled.div`
 	width: 100%;
+	max-height: 100vh;
 	overflow: scroll;
-	/* border: 1px solid #333333; */
 `;
 
 const THContainer = styled.div`
@@ -109,7 +109,10 @@ const Th: StyledComponent<'th', any, StyledTableHeaderProps, never> = styled(({ 
 const Body: StyledComponent<'tbody', any, StyledTableBodyProps, never> = styled.tbody``;
 
 const Thead: StyledComponent<'thead', any, StyledTableTheadProps, never> = styled.thead`
-	background-color: #0e131a;
+	&[data-sticky] {
+		position: sticky;
+		top: 0;
+	}
 `;
 
 const Footer: StyledComponent<'tfoot', any, StyledTableTheadProps, never> = styled.tfoot``;

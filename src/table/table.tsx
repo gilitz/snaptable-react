@@ -17,7 +17,7 @@ export const SnapTable = (({
 	const { draggedIndex, hoveredIndex, onDragStart, onDragOver, onDrop } = useDragAndDrop();
 	return (
 		<TableLayout {...props} tableContainerClass={tableContainerClass} tableClass={tableClass}>
-			<TableLayout.Thead>
+			<TableLayout.Thead data-sticky={dataAttr(dataTable.isStickyHeader)}>
 				<TableLayout.Row className={headerRowClass}>
 					{dataTable.columns.map((column: TableColumnType, index: number) =>
 						<TableLayout.Header

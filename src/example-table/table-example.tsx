@@ -2,7 +2,7 @@ import { useDataTable } from "../hooks/use-data-table";
 import { Table } from "./table";
 
 export const TableExample = (() => {
-	const dataTable = useDataTable({ key: 'gilitz-table', columns: tableColumns, saveLayoutView: true })
+	const dataTable = useDataTable({ key: 'gilitz-table', columns: tableColumns, saveLayoutView: true, isStickyHeader: false })
 	return (
 		<Table dataTable={dataTable} data={mockData} />
 	)
@@ -25,5 +25,12 @@ const mockData = [
 	{ key: 'item4', name: 'item 4', label: '4' },
 	{ key: 'item5', name: 'item 5', label: '5' },
 	{ key: 'item6', name: 'item 6', label: '6' },
-	{ key: 'item7', name: 'item 7', label: '7' }
+	{ key: 'item7', name: 'item 7', label: '7' },	
+	{ key: 'item8', name: 'item 8', label: '8' },
+	{ key: 'item9', name: 'item 9', label: '9' },
+	{ key: 'item10', name: 'item 10', label: '10' },
+	{ key: 'item11', name: 'item 11', label: '11' },
+	{ key: 'item12', name: 'item 12', label: '12' },
+	{ key: 'item13', name: 'item 13', label: '13' },
+	{ key: 'item14', name: 'item 14', label: '7' },
 ]
