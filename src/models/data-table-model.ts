@@ -51,7 +51,8 @@ class DataTable {
 		// load initial view if exists
 		if (saveLayoutView) {
 			if (savedColumns) {
-				this.columns = savedColumns.reduce((result: TableColumnType[], savedColumn: ColumnWidthType) => {
+				const newFilteredColumns = columns.filter(column => !savedColumns.map(({ key }: TableColumnType) => key).includes(column.key));
+				const updatedColumns = savedColumns.reduce((result: TableColumnType[], savedColumn: ColumnWidthType) => {
 					const currentColumn = columns.find(({ key }) => key === savedColumn.key)
 					if (!currentColumn) {
 						return result;
@@ -60,7 +61,7 @@ class DataTable {
 					return result;
 				}, []);
 
-				this.columnsWidth = savedColumns.reduce((result: ColumnWidthType[], savedColumn: ColumnWidthType) => {
+				const updatedColumnsWidth = savedColumns.reduce((result: ColumnWidthType[], savedColumn: ColumnWidthType) => {
 					const currentColumn = columns.find(({ key }) => key === savedColumn.key)
 					if (!currentColumn) {
 						return result;
@@ -68,6 +69,9 @@ class DataTable {
 					result = [...result, { key: currentColumn.key, width: currentColumn.width ?? savedColumn.width }];
 					return result;
 				}, [])
+
+				this.columns = updatedColumns.concat(newFilteredColumns);
+				this.columnsWidth = updatedColumnsWidth.concat(newFilteredColumns.map(({ key, width }) => ({ key, width: width ?? defaultColumnWidth })));
 			}
 			else {
 				localStorage.setItem(key, JSON.stringify(this.columnsWidth));

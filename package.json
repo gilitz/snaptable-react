@@ -1,6 +1,6 @@
 {
   "name": "snaptable-react",
-  "version": "1.0.16",
+  "version": "1.0.2",
   "type": "module",
   "main": "dist/index.ts",
   "scripts": {
