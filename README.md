@@ -132,7 +132,7 @@ The `useDataTable` hook accepts an object with the following properties:
 - **columns** (array): Array of column definitions.
 - **hasDraggableColumns** (boolean): Enable/Disable drag-and-drop columns.
 - **saveLayoutView** (boolean): Enable/Disable saving the layout view.
-- **isStickyHeader** (boolean): Enable/Disable sticky header in table.
+- **isStickyHeader** (boolean): Enable/Disable sticky header in table. you might need to adjust the max-height of the TableContainer (depends on the screen size and number of rows)
 
 
 
