@@ -39,10 +39,14 @@ export const SnapTable = (({
 			</TableLayout.Thead>
 			<TableLayout.Body className={bodyClass}>
 				{data.map((item: any) => (
-					<TableLayout.Row key={item.key} className={rowClass}>
-						{dataTable.columns.map(({ key, Cell }: TableColumnType) =>
-							<Cell key={key} className={cellClass} data={item} />
-						)}
+					<TableLayout.Row 
+						key={item.key} 
+						className={rowClass} 
+						onClick={() => dataTable.onRowClick?.({ item })} 
+						data-clickable={dataAttr(Boolean(dataTable.onRowClick))}>
+							{dataTable.columns.map(({ key, Cell }: TableColumnType) =>
+								<Cell key={key} className={cellClass} data={item} />
+							)}
 					</TableLayout.Row>
 				))}
 			</TableLayout.Body>

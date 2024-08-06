@@ -10,7 +10,6 @@ export type SnapTableType = {
 	rowClass?: string;
 	headerCellClass?: string;
 	cellClass?: string;
-
 };
 
 export default SnapTableType;

@@ -20,7 +20,9 @@ type HeaderProps = {
 
 type StyledTableProps = {};
 
-type StyledTableRowProps = {};
+type StyledTableRowProps = {
+	onRowClick?: ({ item }: {item: any}) => void
+};
 
 type StyledTableHeaderProps = {};
 
@@ -58,7 +60,11 @@ const ResizeHandler = styled.div`
 	visibility: hidden;
 `;
 
-const Tr: StyledComponent<'tr', any, StyledTableRowProps, never> = styled.tr``;
+const Tr: StyledComponent<'tr', any, StyledTableRowProps, never> = styled.tr`
+	&[data-clickable] {
+		cursor: pointer;
+	}
+`;
 
 const Th: StyledComponent<'th', any, StyledTableHeaderProps, never> = styled(({ children, dataTable, index, resizeable = true, ...props }: HeaderProps) => {
 	const ref = useRef<HTMLDivElement>(null);
