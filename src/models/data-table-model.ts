@@ -1,12 +1,19 @@
 import { makeAutoObservable } from 'mobx';
 import { ReactNode } from "react";
 
+type NestedColumnType = {
+	key: string;
+	label: string | ReactNode;
+	Cell: any;
+};
+
 export type TableColumnType = {
 	key: string;
 	label: string | ReactNode;
 	width?: number;
 	resizeable?: boolean;
 	Cell: any;
+	nestedColumns?: NestedColumnType[];
 }
 
 type ColumnWidthType = {
