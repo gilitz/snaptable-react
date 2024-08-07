@@ -34,11 +34,9 @@
   },
   "keywords": [
     "react",
-    "typescript",
+	"react-table",
+	"snapshot-table",
     "table",
-    "mobx",
-    "styled-component",
-    "layout",
     "snapshot"
   ],
   "author": "gilitz",

@@ -100,9 +100,9 @@ import { useDataTable } from 'snaptable-react';
 import StyledTable from './path-of-styled-table'
 
 const tableColumns = [
-  { key: 'name', label: 'Name', resizable: true, Cell: ({ name }) => <td>{name}</td> },
-  { key: 'age', label: 'Age', resizable: true, Cell: ({ age }) => <td>{age}</td> },
-  { key: 'email', label: 'Email', width: 200, Cell: ({ email }) => <td>{email}</td> },
+  { key: 'name', label: 'Name', resizable: true, Cell: ({ data, ...props }) => <td {...props}>{data.name}</td> },
+  { key: 'age', label: 'Age', resizable: true, Cell: ({ data, ...props }) => <td {...props}>{data.age}</td> },
+  { key: 'email', label: 'Email', width: 200, Cell: ({ data, ...props }) => <td {...props}>{data.email}</td> },
   // Add more columns as needed
 ];
 
