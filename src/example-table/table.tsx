@@ -6,8 +6,8 @@ import { SnapTableType } from "../types/table-type";
 
 const Header = css`
 	.header-cell-class {
-		height: 60px;
-		padding: 4px 0 4px 16px;
+		height: 68px;
+		padding: 4px 16px;
 		text-align: left;
 		color: var(--color-text-secondary);
 		overflow: hidden; 

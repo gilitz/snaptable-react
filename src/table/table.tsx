@@ -1,7 +1,7 @@
 import { TableLayout } from "./table-layout";
 import { TableColumnType } from "../models/data-table-model";
-import useDragAndDrop from "../hooks/use-drag-drop";
 import { SnapTableType } from "../types/table-type";
+import useDragAndDrop from "../hooks/use-drag-drop";
 
 export const SnapTable = (({
 	dataTable,
@@ -19,7 +19,7 @@ export const SnapTable = (({
 		<TableLayout {...props} tableContainerClass={tableContainerClass} tableClass={tableClass}>
 			<TableLayout.Thead data-sticky={dataAttr(dataTable.isStickyHeader)}>
 				<TableLayout.Row className={headerRowClass}>
-					{dataTable.columns.map((column: TableColumnType, index: number) =>
+					{dataTable.columns.map((column: TableColumnType, index: number) =>(
 						<TableLayout.Header
 							key={column.key}
 							index={index}
@@ -34,7 +34,7 @@ export const SnapTable = (({
 							onDrop={onDrop(index, () => dataTable.moveColumn(draggedIndex, index))}>
 							{column.label}
 						</TableLayout.Header>
-					)}
+					))}
 				</TableLayout.Row>
 			</TableLayout.Thead>
 			<TableLayout.Body className={bodyClass}>

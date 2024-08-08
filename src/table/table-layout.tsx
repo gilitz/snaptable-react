@@ -1,8 +1,8 @@
-import { ReactNode, useEffect, useRef } from 'react';
+import { ReactNode, useRef } from 'react';
 // @ts-expect-error
 import styled, { StyledComponent } from 'styled-components';
 import { DataTableType } from '../models/data-table-model';
-import { useResizeObserver } from '../hooks/use-resize-observer';
+import { observer } from 'mobx-react';
 
 type TableLayoutType = {
 	children?: React.ReactNode;
@@ -31,7 +31,7 @@ type StyledTableBodyProps = {};
 type StyledTableTheadProps = {};
 
 const StyledTable: StyledComponent<'table', any, StyledTableProps, never> = styled.table`
-	width: 100%;
+	width: max-content;
 	border-collapse: collapse;
 `;
 
@@ -48,16 +48,17 @@ const THContainer = styled.div`
 `;
 
 const ResizeHandler = styled.div`
-	min-width: 8px;
-	height: 8px;
-	position: relative;
+	width: 4px;
+	height: 100%;
+	position: absolute;
 	top: 0;
-	right: -8px;
+	right: 0;
 	background-color: transparent;
-	resize: horizontal;
 	overflow: hidden;
-	transform: scaleY(4);
 	visibility: hidden;
+	touch-action: none;
+	user-select: none;
+	cursor: col-resize;
 `;
 
 const Tr: StyledComponent<'tr', any, StyledTableRowProps, never> = styled.tr`
@@ -66,44 +67,49 @@ const Tr: StyledComponent<'tr', any, StyledTableRowProps, never> = styled.tr`
 	}
 `;
 
-const Th: StyledComponent<'th', any, StyledTableHeaderProps, never> = styled(({ children, dataTable, index, resizeable = true, ...props }: HeaderProps) => {
-	const ref = useRef<HTMLDivElement>(null);
-	const staticWidth = useRef(`${dataTable.columnsWidth[index].width}px`);
-	const resizeHandlerstyle = { width: staticWidth.current, minWidth: dataTable.columns[index].width ? staticWidth.current : 'auto' };
-	const widthWithPadding = resizeable ? `${ref.current?.getBoundingClientRect()?.width}px` : staticWidth.current;
+const Th: StyledComponent<'th', any, StyledTableHeaderProps, never> = styled(observer(({ children, dataTable, index, resizeable = true, ...props }: HeaderProps) => {
+	const ref = useRef<any>(null);
 
-	const resizeHandlerWidth = useResizeObserver({ref});
+	const handleMouseDown = (index: number) => (event:MouseEvent) => {
+		event.preventDefault();
+		const startX = event.clientX;
+		let widthWithPadding = ref.current?.getBoundingClientRect()?.width;
+		let updatedColumnsWidth = [...dataTable.columnsWidth];
 
-	useEffect(() => {
-		if (dataTable.saveLayoutView && Boolean(resizeHandlerWidth)) {
-			const customColumnsWidth = [...dataTable.columnsWidth];
-			const updateColummnsWidth = () => {
-				customColumnsWidth[index].width =
-					dataTable.columns[index].width ??
-					resizeHandlerWidth ??
-					customColumnsWidth[index].width;
-				dataTable.setColumnsWidth(customColumnsWidth);
-				const combimedColumns = dataTable.columns.map(({ key }, index) => ({ key, width: customColumnsWidth[index].width }));
-				localStorage.setItem(dataTable.key, JSON.stringify(combimedColumns));
-				staticWidth.current = `${combimedColumns[index].width}px`;
-			}
-			addEventListener('mouseup', updateColummnsWidth);
-			return () => addEventListener('mouseup', updateColummnsWidth);
-		}
-	}, [resizeHandlerWidth, index, dataTable.key, dataTable.columns]);
+		const handleMouseMove = (event: MouseEvent) => {
+		  const newWidth = Math.trunc(Math.max(widthWithPadding + event.clientX - startX, 80));
+		
+		   updatedColumnsWidth = updatedColumnsWidth.map((column, colIndex) =>
+			colIndex === index ? { ...column, width: newWidth } : column);
+
+		   dataTable.setColumnsWidth(updatedColumnsWidth)
+		   localStorage.setItem(dataTable.key, JSON.stringify(updatedColumnsWidth));
+		};
+	
+		const handleMouseUp = () => {
+		  document.removeEventListener('mousemove', handleMouseMove);
+		  document.removeEventListener('mouseup', handleMouseUp);
+		};
+	
+		document.addEventListener('mousemove', handleMouseMove);
+		document.addEventListener('mouseup', handleMouseUp);
+	  };
 
 	return (
-		<th {...props} style={resizeable ? {} : { width: widthWithPadding, minWidth: widthWithPadding }}>
+		<th {...props} ref={ref} style={{ width: dataTable.columnsWidth[index].width, minWidth: dataTable.columns[index].width ?? ref.current?.width }}>
 			<THContainer>
 				{children}
-				{resizeable && <ResizeHandler ref={ref} className="resize-handler" style={resizeHandlerstyle} />}
+				{resizeable && <ResizeHandler className="resize-handler" onMouseDown={handleMouseDown(index)} />}
 			</THContainer>
 		</th>)
-})`
+}))`
+	display: table-cell;
+	position: relative;
+
 	&:hover {
 		${ResizeHandler} {
 			visibility: visible;
-			opacity: 0;
+			background-color: #404145;
 		}
 	}
 
@@ -124,11 +130,11 @@ const Thead: StyledComponent<'thead', any, StyledTableTheadProps, never> = style
 const Footer: StyledComponent<'tfoot', any, StyledTableTheadProps, never> = styled.tfoot``;
 
 export const TableLayout: React.FC<TableLayoutType> & {
+	Body: typeof Body;
+	Thead: typeof Thead;
 	Row: typeof Tr;
 	Header: typeof Th;
-	Thead: typeof Thead;
 	Footer: typeof Footer;
-	Body: typeof Body;
 } = ({ tableContainerClass, tableClass, children, ...props }) => {
 	return (
 		<TableContainer {...props} className={`${props.className} ${tableContainerClass}`}>
@@ -139,8 +145,8 @@ export const TableLayout: React.FC<TableLayoutType> & {
 	);
 };
 
-TableLayout.Row = Tr;
-TableLayout.Thead = Thead;
-TableLayout.Footer = Footer;
-TableLayout.Header = Th;
 TableLayout.Body = Body;
+TableLayout.Thead = Thead;
+TableLayout.Row = Tr;
+TableLayout.Header = Th;
+TableLayout.Footer = Footer;
