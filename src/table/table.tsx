@@ -1,7 +1,7 @@
 import { TableLayout } from "./table-layout";
 import { TableColumnType } from "../models/data-table-model";
-import useDragAndDrop from "../hooks/use-drag-drop";
 import { SnapTableType } from "../types/table-type";
+import useDragAndDrop from "../hooks/use-drag-drop";
 
 export const SnapTable = (({
 	dataTable,

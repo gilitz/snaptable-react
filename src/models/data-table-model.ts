@@ -26,7 +26,7 @@ export interface DataTableLiteType {
 	columns: TableColumnType[];
 	hasDraggableColumns?: boolean;
 	saveLayoutView?: boolean;
-	defaultColumnWidth?: number;
+	defaultColumnWidth?: number | string;
 	isStickyHeader?: boolean;
 	onRowClick?: ({ item }: { item: any }) => void
 }
@@ -46,7 +46,7 @@ class DataTable {
 	onRowClick;
 	columnsWidth: ColumnWidthType[];	 
 
-	constructor({ key, columns, saveLayoutView, hasDraggableColumns, isStickyHeader, onRowClick, defaultColumnWidth = 80 }: DataTableLiteType) {
+	constructor({ key, columns, saveLayoutView, hasDraggableColumns, isStickyHeader, onRowClick, defaultColumnWidth = 'auto' }: DataTableLiteType) {
 		makeAutoObservable(this);
 		// @ts-expect-error
 		const savedColumns = JSON.parse(localStorage.getItem(key));
