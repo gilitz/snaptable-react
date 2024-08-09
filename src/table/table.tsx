@@ -21,10 +21,11 @@ export const SnapTable = (({
 			<TableLayout.Thead data-sticky={dataAttr(dataTable.isStickyHeader)}>
 				<TableLayout.Row className={headerRowClass}>
 					{dataTable.columns.map((column: TableColumnType, index: number) =>{
-						const colspan = column.nestedColumns?.length ?? 1;
+						// const colSpan = column.nestedColumns?.length ?? 1;
+						const colSpan = column.nestedColumns?.length ? sumNumbers(column.nestedColumns.map(({ colSpan }) => colSpan)) : 1;
 						return (<TableLayout.Header
 							key={column.key}
-							colSpan={colspan}
+							colSpan={colSpan}
 							index={index}
 							dataTable={dataTable}
 							className={headerCellClass}
@@ -40,13 +41,24 @@ export const SnapTable = (({
 						)}
 					)}
 				</TableLayout.Row>
-				{dataTable.columns.some(column => Boolean(column.nestedColumns)) &&<TableLayout.Row className={headerRowClass}>
-					{dataTable.columns.map((column, index) => !column.nestedColumns?.length ? 
-						<th key={index} className={nestedHeaderCellClass ?? headerCellClass} />
-						:
-						column.nestedColumns.map((nestedColumn) =><th key={nestedColumn.key} className={nestedHeaderCellClass ?? headerCellClass}>{nestedColumn.label}</th>
-						))}
-				</TableLayout.Row>}
+				{dataTable.columns.some(column => Boolean(column.nestedColumns)) && 
+					<TableLayout.Row className={headerRowClass}>
+						{dataTable.columns.map((column) => column.nestedColumns?.length ? 
+						column.nestedColumns.map((nestedColumn) =>
+							<TableLayout.ThNested 
+								key={nestedColumn.key} 
+								className={nestedHeaderCellClass ?? headerCellClass}
+								colSpan={nestedColumn.colSpan}>
+								{nestedColumn.label}
+							</TableLayout.ThNested>)
+							:
+							<TableLayout.ThNested 
+								key={`${column.key}-nested`}
+								className={nestedHeaderCellClass ?? headerCellClass}/>
+							
+							)}
+					</TableLayout.Row>
+				}
 			</TableLayout.Thead>
 			<TableLayout.Body className={bodyClass}>
 				{data.map((item: any) => (
@@ -64,7 +76,8 @@ export const SnapTable = (({
 									<nestedColumn.Cell 
 										key={nestedColumn.key} 
 										className={cellClass} 
-										data={item} />
+										data={item} 
+										colSpan={nestedColumn.colSpan}/>
 									)
 							)})}
 					</TableLayout.Row>
@@ -82,3 +95,7 @@ export const SnapTable = (({
 };
 
 export default SnapTable;
+
+const sumNumbers = (numbers: number[]) => 
+	numbers.reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0);
+

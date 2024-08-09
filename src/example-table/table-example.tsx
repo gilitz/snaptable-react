@@ -1,4 +1,3 @@
-import styled from "styled-components";
 import { useDataTable } from "../hooks/use-data-table";
 import { Table } from "./table";
 
@@ -18,8 +17,8 @@ const tableColumns = [
 	{ width: 300, key: '1', resizeable: false, label: 'First', Cell: ({ data, ...props }: { data: any }) => <Table.Cell {...props}>{data.name}</Table.Cell>},
 	{ key: '2', label: 'Second', Cell: ({ data, ...props }: { data: any }) => <Table.Cell {...props}>{data.label}</Table.Cell>,
 	nestedColumns: [
-		{ key: 'nested1', label: 'nested 1', Cell: ({ data, ...props }: { data: any }) => <Table.Cell {...props}>{data.nestedOne}</Table.Cell> },
-		{ key: 'nested2', label: 'nested 2', Cell: ({ data, ...props }: { data: any }) => <Table.Cell {...props}>{data.nestedTwo}</Table.Cell> },
+		{ colSpan: 7, key: 'nested1', label: 'nested 1', Cell: ({ data, ...props }: { data: any }) => <Table.Cell {...props}>{data.nestedOne}</Table.Cell> },
+		{ colSpan: 1, key: 'nested2', label: 'nested 2', Cell: ({ data, ...props }: { data: any }) => <Table.Cell {...props}>{data.nestedTwo}</Table.Cell> },
 	]  },
 	{ key: '3', label: 'Third', Cell: ({ data, ...props }: { data: any }) => <Table.Cell {...props}>{data.name}</Table.Cell> },
 	{ key: '4', label: 'Fourth', Cell: ({ data, ...props }: { data: any }) => <Table.Cell {...props}>{data.label}</Table.Cell> },

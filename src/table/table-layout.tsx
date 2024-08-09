@@ -11,7 +11,7 @@ type TableLayoutType = {
 	tableContainerClass?: string;
 };
 
-type HeaderProps = {
+type HeaderType = {
 	index: number;
 	dataTable: DataTableType;
 	resizeable?: boolean;
@@ -33,6 +33,7 @@ type StyledTableTheadProps = {};
 const StyledTable: StyledComponent<'table', any, StyledTableProps, never> = styled.table`
 	width: max-content;
 	border-collapse: collapse;
+	table-layout: fixed;
 `;
 
 const TableContainer = styled.div`
@@ -67,7 +68,7 @@ const Tr: StyledComponent<'tr', any, StyledTableRowProps, never> = styled.tr`
 	}
 `;
 
-const Th: StyledComponent<'th', any, StyledTableHeaderProps, never> = styled(observer(({ children, dataTable, index, resizeable = true, ...props }: HeaderProps) => {
+const Th: StyledComponent<'th', any, StyledTableHeaderProps, never> = styled(observer(({ children, dataTable, index, resizeable = true, ...props }: HeaderType) => {
 	const ref = useRef<any>(null);
 
 	const handleMouseDown = (index: number) => (event:MouseEvent) => {
@@ -118,6 +119,16 @@ const Th: StyledComponent<'th', any, StyledTableHeaderProps, never> = styled(obs
 	}
 `;
 
+const ThNested: StyledComponent<'th', any, StyledTableHeaderProps, never> = styled(observer((props: HeaderType) => {
+	return (<th {...props} style={{ width: 'unset' }} />);
+}))`
+	display: table-cell;
+
+	&[data-draggable] {
+		cursor: pointer;
+	}
+`;
+
 const Body: StyledComponent<'tbody', any, StyledTableBodyProps, never> = styled.tbody``;
 
 const Thead: StyledComponent<'thead', any, StyledTableTheadProps, never> = styled.thead`
@@ -135,6 +146,7 @@ export const TableLayout: React.FC<TableLayoutType> & {
 	Row: typeof Tr;
 	Header: typeof Th;
 	Footer: typeof Footer;
+	ThNested: typeof ThNested;
 } = ({ tableContainerClass, tableClass, children, ...props }) => {
 	return (
 		<TableContainer {...props} className={`${props.className} ${tableContainerClass}`}>
@@ -150,3 +162,4 @@ TableLayout.Thead = Thead;
 TableLayout.Row = Tr;
 TableLayout.Header = Th;
 TableLayout.Footer = Footer;
+TableLayout.ThNested = ThNested;
