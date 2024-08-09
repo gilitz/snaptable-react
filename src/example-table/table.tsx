@@ -4,31 +4,44 @@ import styled, { css, StyledComponent } from 'styled-components';
 import { SnapTable } from "../table/table";
 import { SnapTableType } from "../types/table-type";
 
-const Header = css`
-	.header-cell-class {
-		height: 68px;
-		padding: 4px 16px;
-		text-align: left;
-		color: var(--color-text-secondary);
-		overflow: hidden; 
-		position: relative;
-		border: 1px solid #333333;
-		background-color: #1e2a39;
-		border-top: none;
+const HeaderStyle = css`
+	height: 68px;
+	padding: 4px 16px;
+	text-align: left;
+	color: var(--color-text-secondary);
+	overflow: hidden; 
+	position: relative;
+	border: 1px solid #333333;
+	background-color: #1e2a39;
+	border-top: none;
 
-		&:first-of-type {
-			border-left: none;
-		}
+	&:first-of-type {
+		border-left: none;
+	}
 
-		&:last-of-type {
-			border-right: none;
-		}
-		
-		&[data-drag-hovered] {
-			background-color: #38485b;
-		}
+	&:last-of-type {
+		border-right: none;
+	}
+	
+	&[data-drag-hovered] {
+		background-color: #38485b;
 	}
 `;
+
+const Header = css`
+	.header-cell-class {
+		${HeaderStyle};
+	}
+`;
+
+const NestedHeaderCell = css`
+	.nested-header-cell {
+		${HeaderStyle};
+		height: 40px;
+		font-size: 14px;
+	}
+`;
+
 
 const Cell = css`
 	.cell-class {	
@@ -67,11 +80,12 @@ const Td: StyledComponent<'td', any, {}, never> = styled.td`
 export const Table: React.FC<{ children?: ReactNode } & SnapTableType> & {
 	Cell: typeof Td;
 } = styled((props: any) => {
-	return <SnapTable {...props} tableContainerClass="table-container-class" tableClass='table-class' cellClass='cell-class' headerCellClass='header-cell-class' />
+	return <SnapTable {...props} tableContainerClass="table-container-class" tableClass='table-class' cellClass='cell-class' headerCellClass='header-cell-class' nestedHeaderCellClass="nested-header-cell"/>
 })`
 	${TableContainerClass};
 	${TableCss};
 	${Header};
+	${NestedHeaderCell};
 	${Cell};
 `;
 

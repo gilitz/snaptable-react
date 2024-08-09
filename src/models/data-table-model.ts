@@ -1,17 +1,24 @@
 import { makeAutoObservable } from 'mobx';
 import { ReactNode } from "react";
 
+type NestedColumnType = {
+	key: string;
+	label?: string | ReactNode;
+	Cell?: any;
+};
+
 export type TableColumnType = {
 	key: string;
 	label: string | ReactNode;
 	width?: number;
 	resizeable?: boolean;
 	Cell: any;
+	nestedColumns?: NestedColumnType[];
 }
 
 type ColumnWidthType = {
 	key: string;
-	width: number;
+	width?: number;
 }
 
 export interface DataTableLiteType {
@@ -38,6 +45,7 @@ class DataTable {
 	isStickyHeader;
 	onRowClick;
 	columnsWidth: ColumnWidthType[];	 
+	// nestedColumnsWidth?: ColumnWidthType[] | null;	 
 
 	constructor({ key, columns, saveLayoutView, hasDraggableColumns, isStickyHeader, onRowClick, defaultColumnWidth = 'auto' }: DataTableLiteType) {
 		makeAutoObservable(this);
@@ -48,6 +56,7 @@ class DataTable {
 		this.hasDraggableColumns = hasDraggableColumns ?? true;
 		this.isStickyHeader = isStickyHeader ?? false;
 		this.onRowClick = onRowClick;
+
 		this.columnsWidth = columns.map((column) => {
 			const savedColumn = savedColumns?.find(({ key }: ColumnWidthType) => key === column.key);
 			return ({ key: column.key, width: column.width ?? savedColumn?.width ?? defaultColumnWidth });
