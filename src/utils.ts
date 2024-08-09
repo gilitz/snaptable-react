@@ -4,6 +4,3 @@ export const dataAttr = (flag: boolean | undefined, value?: string) => {
 	}
 	return value ?? '';
 };
-
-export const sumNumbers = (numbers: number[]) => 
-	numbers.reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0);
