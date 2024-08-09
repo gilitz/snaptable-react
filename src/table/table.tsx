@@ -2,6 +2,7 @@ import { TableLayout } from "./table-layout";
 import { TableColumnType } from "../models/data-table-model";
 import { SnapTableType } from "../types/table-type";
 import useDragAndDrop from "../hooks/use-drag-drop";
+import { dataAttr, sumNumbers } from "../utils";
 
 export const SnapTable = (({
 	dataTable,
@@ -20,12 +21,9 @@ export const SnapTable = (({
 		<TableLayout {...props} tableContainerClass={tableContainerClass} tableClass={tableClass}>
 			<TableLayout.Thead data-sticky={dataAttr(dataTable.isStickyHeader)}>
 				<TableLayout.Row className={headerRowClass}>
-					{dataTable.columns.map((column: TableColumnType, index: number) =>{
-						// const colSpan = column.nestedColumns?.length ?? 1;
-						const colSpan = column.nestedColumns?.length ? sumNumbers(column.nestedColumns.map(({ colSpan }) => colSpan)) : 1;
-						return (<TableLayout.Header
+					{dataTable.columns.map((column: TableColumnType, index: number) => (
+						<TableLayout.Header
 							key={column.key}
-							colSpan={colSpan}
 							index={index}
 							dataTable={dataTable}
 							className={headerCellClass}
@@ -38,8 +36,7 @@ export const SnapTable = (({
 							onDrop={onDrop(index, () => dataTable.moveColumn(draggedIndex, index))}>
 							{column.label}
 						</TableLayout.Header>
-						)}
-					)}
+					))}
 				</TableLayout.Row>
 				{dataTable.columns.some(column => Boolean(column.nestedColumns)) && 
 					<TableLayout.Row className={headerRowClass}>
@@ -47,8 +44,7 @@ export const SnapTable = (({
 						column.nestedColumns.map((nestedColumn) =>
 							<TableLayout.ThNested 
 								key={nestedColumn.key} 
-								className={nestedHeaderCellClass ?? headerCellClass}
-								colSpan={nestedColumn.colSpan}>
+								className={nestedHeaderCellClass ?? headerCellClass}>
 								{nestedColumn.label}
 							</TableLayout.ThNested>)
 							:
@@ -76,8 +72,7 @@ export const SnapTable = (({
 									<nestedColumn.Cell 
 										key={nestedColumn.key} 
 										className={cellClass} 
-										data={item} 
-										colSpan={nestedColumn.colSpan}/>
+										data={item} />
 									)
 							)})}
 					</TableLayout.Row>
@@ -87,15 +82,5 @@ export const SnapTable = (({
 	)
 });
 
- const dataAttr = (flag: boolean | undefined, value?: string) => {
-	if (!flag) {
-		return null;
-	}
-	return value ?? '';
-};
-
 export default SnapTable;
-
-const sumNumbers = (numbers: number[]) => 
-	numbers.reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0);
 

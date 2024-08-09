@@ -16,7 +16,7 @@ type HeaderType = {
 	dataTable: DataTableType;
 	resizeable?: boolean;
 	children: ReactNode
-}
+};
 
 type StyledTableProps = {};
 

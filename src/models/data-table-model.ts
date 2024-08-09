@@ -4,7 +4,6 @@ import { ReactNode } from "react";
 type NestedColumnType = {
 	key: string;
 	label?: string | ReactNode;
-	colSpan: number;
 	Cell?: any;
 };
 
