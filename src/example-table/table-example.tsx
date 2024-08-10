@@ -14,7 +14,7 @@ export const TableExample = (() => {
 });
 
 const tableColumns = [
-	{ width: 300, key: '1', resizeable: false, label: 'First', Cell: ({ data, ...props }: { data: any }) => <Table.Cell {...props}>{data.name}</Table.Cell>},
+	{ width: 300, key: '1', resizeable: true, label: 'First', Cell: ({ data, ...props }: { data: any }) => <Table.Cell {...props}>{data.name}</Table.Cell>},
 	{ key: '2', label: 'Second', Cell: ({ data, ...props }: { data: any }) => <Table.Cell {...props}>{data.label}</Table.Cell>,
 	nestedColumns: [
 		{ key: 'nested1', label: 'nested 1', Cell: ({ data, ...props }: { data: any }) => <Table.Cell {...props}>{data.nestedOne}</Table.Cell> },

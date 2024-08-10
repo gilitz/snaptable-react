@@ -15,6 +15,7 @@ type HeaderType = {
 	index: number;
 	dataTable: DataTableType;
 	resizeable?: boolean;
+	colSpan: number;
 	children: ReactNode
 };
 
@@ -68,41 +69,42 @@ const Tr: StyledComponent<'tr', any, StyledTableRowProps, never> = styled.tr`
 	}
 `;
 
-const Th: StyledComponent<'th', any, StyledTableHeaderProps, never> = styled(observer(({ children, dataTable, index, resizeable = true, ...props }: HeaderType) => {
-	const ref = useRef<any>(null);
+const Th: StyledComponent<'th', any, StyledTableHeaderProps, never> = styled(
+	observer(({ children, dataTable, index, colSpan, resizeable = true, ...props }: HeaderType) => {
+		const ref = useRef<any>(null);
 
-	const handleMouseDown = (index: number) => (event:MouseEvent) => {
-		event.preventDefault();
-		const startX = event.clientX;
-		let widthWithPadding = ref.current?.getBoundingClientRect()?.width;
-		let updatedColumnsWidth = [...dataTable.columnsWidth];
+		const handleMouseDown = (index: number) => (event:MouseEvent) => {
+			event.preventDefault();
+			const startX = event.clientX;
+			let widthWithPadding = ref.current?.getBoundingClientRect()?.width;
+			let updatedColumnsWidth = [...dataTable.columnsWidth];
 
-		const handleMouseMove = (event: MouseEvent) => {
-		  const newWidth = Math.trunc(Math.max(widthWithPadding + event.clientX - startX, 80));
+			const handleMouseMove = (event: MouseEvent) => {
+			const newWidth = Math.trunc(Math.max(widthWithPadding + event.clientX - startX, 80));
+			
+			updatedColumnsWidth = updatedColumnsWidth.map((column, colIndex) =>
+				colIndex === index ? { ...column, width: newWidth } : column);
+
+			dataTable.setColumnsWidth(updatedColumnsWidth)
+			localStorage.setItem(dataTable.key, JSON.stringify(updatedColumnsWidth));
+			};
 		
-		   updatedColumnsWidth = updatedColumnsWidth.map((column, colIndex) =>
-			colIndex === index ? { ...column, width: newWidth } : column);
-
-		   dataTable.setColumnsWidth(updatedColumnsWidth)
-		   localStorage.setItem(dataTable.key, JSON.stringify(updatedColumnsWidth));
+			const handleMouseUp = () => {
+			document.removeEventListener('mousemove', handleMouseMove);
+			document.removeEventListener('mouseup', handleMouseUp);
+			};
+		
+			document.addEventListener('mousemove', handleMouseMove);
+			document.addEventListener('mouseup', handleMouseUp);
 		};
-	
-		const handleMouseUp = () => {
-		  document.removeEventListener('mousemove', handleMouseMove);
-		  document.removeEventListener('mouseup', handleMouseUp);
-		};
-	
-		document.addEventListener('mousemove', handleMouseMove);
-		document.addEventListener('mouseup', handleMouseUp);
-	  };
 
-	return (
-		<th {...props} ref={ref} style={{ width: dataTable.columnsWidth[index].width, minWidth: dataTable.columns[index].width ?? ref.current?.width }}>
-			<THContainer>
-				{children}
-				{resizeable && <ResizeHandler className="resize-handler" onMouseDown={handleMouseDown(index)} />}
-			</THContainer>
-		</th>)
+		return (
+			<th {...props} ref={ref} colSpan={colSpan} style={{ width: dataTable.columnsWidth[index].width, minWidth: dataTable.columns[index].width ?? ref.current?.width }}>
+				<THContainer>
+					{children}
+					{resizeable && <ResizeHandler className="resize-handler" onMouseDown={handleMouseDown(index)} />}
+				</THContainer>
+			</th>)
 }))`
 	display: table-cell;
 	position: relative;
@@ -119,8 +121,11 @@ const Th: StyledComponent<'th', any, StyledTableHeaderProps, never> = styled(obs
 	}
 `;
 
-const ThNested: StyledComponent<'th', any, StyledTableHeaderProps, never> = styled(observer((props: HeaderType) => {
-	return (<th {...props} style={{ width: 'unset' }} />);
+const ThNested: StyledComponent<'th', any, StyledTableHeaderProps, never> = styled(
+	observer((props: HeaderType) => {
+		return (
+			<th {...props} style={{ width: 'unset' }} />
+		);
 }))`
 	display: table-cell;
 

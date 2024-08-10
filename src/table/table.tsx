@@ -24,6 +24,7 @@ export const SnapTable = (({
 					{dataTable.columns.map((column: TableColumnType, index: number) => (
 						<TableLayout.Header
 							key={column.key}
+							colSpan={column.nestedColumns?.length ?? 1}
 							index={index}
 							dataTable={dataTable}
 							className={headerCellClass}
@@ -36,7 +37,8 @@ export const SnapTable = (({
 							onDrop={onDrop(index, () => dataTable.moveColumn(draggedIndex, index))}>
 							{column.label}
 						</TableLayout.Header>
-					))}
+						)
+					)}
 				</TableLayout.Row>
 				{dataTable.columns.some(column => Boolean(column.nestedColumns)) && 
 					<TableLayout.Row className={headerRowClass}>
@@ -51,7 +53,6 @@ export const SnapTable = (({
 							<TableLayout.ThNested 
 								key={`${column.key}-nested`}
 								className={nestedHeaderCellClass ?? headerCellClass}/>
-							
 							)}
 					</TableLayout.Row>
 				}
@@ -83,4 +84,3 @@ export const SnapTable = (({
 });
 
 export default SnapTable;
-
