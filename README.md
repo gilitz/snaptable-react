@@ -7,6 +7,7 @@
 - **Drag and Drop Columns**: Easily reorder columns by dragging and dropping.
 - **Resizable Columns**: Adjust the width of columns by dragging the edges (unless a fixed width is set).
 - **Persistent Layout Views**: Save the table layout so it persists after a page refresh.
+- **Nested Header Columns**: Add second level row to header. each column's width will be half of parent
 
 <br />
 
@@ -44,10 +45,15 @@ import { SnapTable, useDataTable, SnapTableType } from 'snaptable-react';
 ### Define Your Columns Structure
 Each column should have the following properties: key, label, Cell, and optionally resizable and width.
 ```
-const columns = [
-  { key: 'name', label: 'Name', resizable: true, Cell: ({ name }) => <td>{name}</td> },
-  { key: 'age', label: 'Age', resizable: true, Cell: ({ age }) => <td>{age}</td> },
-  { key: 'email', label: 'Email', width: 200, Cell: ({ email }) => <td>{email}</td> },
+const tableColumns = [
+  { key: 'name', label: 'Name', resizable: true, Cell: ({ data }) => <td>{data.name}</td>, width: 200,
+  nestedColumns: [
+		{ key: 'nested1', label: 'nested 1', Cell: ({ data, ...props }: { data: any }) => <td {...props}>{data.nestedOne}</td> },
+		{ key: 'nested2', label: 'nested 2', Cell: ({ data, ...props }: { data: any }) => <td {...props}>{data.nestedTwo}</td> },
+	]},
+  { key: 'age', label: 'Age', resizable: true, Cell: ({ data, ...props }) => <td {...props}>{data.age}</td> },
+  { key: 'email', label: 'Email', width: 200, Cell: ({ data, ...props }) => <td {...props}>{data.email}</td> },
+  
   // Add more columns as needed
 ];
 ```
@@ -100,14 +106,19 @@ import { useDataTable } from 'snaptable-react';
 import StyledTable from './path-of-styled-table'
 
 const tableColumns = [
-  { key: 'name', label: 'Name', resizable: true, Cell: ({ data, ...props }) => <td {...props}>{data.name}</td> },
+  { key: 'name', label: 'Name', resizable: true, Cell: ({ data }) => <td>{data.name}</td>, width: 200,
+  nestedColumns: [
+		{ key: 'nested1', label: 'nested 1', Cell: ({ data, ...props }: { data: any }) => <td {...props}>{data.nestedOne}</td> },
+		{ key: 'nested2', label: 'nested 2', Cell: ({ data, ...props }: { data: any }) => <td {...props}>{data.nestedTwo}</td> },
+	]},
   { key: 'age', label: 'Age', resizable: true, Cell: ({ data, ...props }) => <td {...props}>{data.age}</td> },
   { key: 'email', label: 'Email', width: 200, Cell: ({ data, ...props }) => <td {...props}>{data.email}</td> },
+
   // Add more columns as needed
 ];
 
 const data = [
-  { key: 1, name: 'John Doe', age: 28, email: 'john@example.com' },
+  { key: 1, name: 'John Doe', age: 28, email: 'john@example.com', nested1: 'nested1', nested2: 'nested2' },
   { key: 2, name: 'Jane Smith', age: 34, email: 'jane@example.com' },
   // Add more data as needed
 ];
@@ -129,9 +140,9 @@ const TableExample = (() => {
 The `useDataTable` hook accepts an object with the following properties:
 
 - **data** (array): Array of items, all items must have a key. each item is a row
-- **columns** (array): Array of column definitions.
-- **hasDraggableColumns** (boolean): Enable/Disable drag-and-drop columns.
-- **saveLayoutView** (boolean): Enable/Disable saving the layout view.
+- **columns** (array): Array of column definitions
+- **hasDraggableColumns** (boolean): Enable/Disable drag-and-drop columns
+- **saveLayoutView** (boolean): Enable/Disable saving the layout view
 - **isStickyHeader** (boolean): Enable/Disable sticky header in table. you might need to adjust the max-height of the TableContainer (depends on the screen size and number of rows)
 - **onRowClick** ({ item (the item for the row) }): when click on row run this function
 
@@ -141,14 +152,15 @@ The `useDataTable` hook accepts an object with the following properties:
 
 The `SnapTable` component accepts the following props:
 
-- **data** (array): Array of items, where each item must have a key.
-- **dataModel** (object): The data model returned from the `useDataTable` hook.
+- **data** (array): Array of items, where each item must have a key
+- **dataModel** (object): The data model returned from the `useDataTable` hook
 - **tableContainerClass?** (string): classname to change table-container (div) element's css style
 - **tableClass?** (string): classname to change (table) element's css style
 - **bodyClass?** (string): classname to change (body) element's css style
 - **headerRowClass?** (string): classname to change header-row (tr) element's css style
 - **rowClass?** (string): classname to change row (tr) element's css style
 - **headerCellClass?** (string): classname to change header-cell (th) element's css style
+- **nestedHeaderCellClass?** (string): classname to change header-cell (th) element's css style (if null, will use headerCellClass instead)
 - **cellClass?** (string): classname to change cell (td) element's css style
 
 
@@ -157,7 +169,21 @@ The `SnapTable` component accepts the following props:
 The `SnapTableType` Type is for typescript usage
 
 <br />
+
+### Column Options:
+
+Table `Column` can accepts the following props:
+
+- **key** (string): key of the column
+- **label** (string | JSX): label of the column (can be a string or jsx)
+- **Cell** (ReactComponent): the component to render for this header type
+- **resizeable?** (boolean): set if a column is resizeable or not
+- **width?** (number): setting a constant width to a column if resizeable false / setting minWidth to a column of resizeable true
+- **nestedColumns?** (array): array of nested columns (each column has key, label?, Cell)
+
 <br />
+<br />
+
 
 ## Working Example: 
 
