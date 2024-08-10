@@ -69,8 +69,6 @@ const Tr: StyledComponent<'tr', any, StyledTableRowProps, never> = styled.tr`
 	}
 `;
 
-const DEFAULT_MIN_WIDTH = 80;
-
 const Th: StyledComponent<'th', any, StyledTableHeaderProps, never> = styled(
 	observer(({ children, dataTable, index, colSpan, resizeable = true, ...props }: HeaderType) => {
 		const ref = useRef<any>(null);
@@ -102,7 +100,7 @@ const Th: StyledComponent<'th', any, StyledTableHeaderProps, never> = styled(
 
 		return (
 			<th {...props} ref={ref} colSpan={colSpan} 
-				style={{ width: dataTable.columnsWidth[index].width, minWidth: dataTable.columns[index].width ?? ref.current?.width ?? DEFAULT_MIN_WIDTH }}>
+				style={{ width: dataTable.columnsWidth[index].width, minWidth: dataTable.columns[index].width ?? ref.current?.width }}>
 				<THContainer>
 					{children}
 					{resizeable && <ResizeHandler className="resize-handler" onMouseDown={handleMouseDown(index)} />}
