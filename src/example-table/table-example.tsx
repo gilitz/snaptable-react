@@ -10,7 +10,7 @@ export const TableExample = (() => {
 	})
 	return (
 		<Table dataTable={dataTable} data={mockData} />
-	)
+	);
 });
 
 const tableColumns = [
