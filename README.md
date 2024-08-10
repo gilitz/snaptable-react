@@ -169,7 +169,6 @@ The `SnapTable` component accepts the following props:
 The `SnapTableType` Type is for typescript usage
 
 <br />
-<br />
 
 ### Column Options:
 
