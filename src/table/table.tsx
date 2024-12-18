@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { TableLayout } from "./table-layout";
 import { TableColumnType } from "../models/data-table-model";
 import { SnapTableType } from "../types/table-type";
@@ -37,45 +38,46 @@ export const SnapTable = (({
 							onDrop={onDrop(index, () => dataTable.moveColumn(draggedIndex, index))}>
 							{column.label}
 						</TableLayout.Header>
-						)
+					)
 					)}
 				</TableLayout.Row>
-				{dataTable.columns.some(column => Boolean(column.nestedColumns)) && 
+				{dataTable.columns.some(column => Boolean(column.nestedColumns)) &&
 					<TableLayout.Row className={headerRowClass}>
-						{dataTable.columns.map((column) => column.nestedColumns?.length ? 
-						column.nestedColumns.map((nestedColumn) =>
-							<TableLayout.ThNested 
-								key={nestedColumn.key} 
-								className={nestedHeaderCellClass ?? headerCellClass}>
-								{nestedColumn.label}
-							</TableLayout.ThNested>)
+						{dataTable.columns.map((column) => column.nestedColumns?.length ?
+							column.nestedColumns.map((nestedColumn) =>
+								<TableLayout.ThNested
+									key={nestedColumn.key}
+									className={nestedHeaderCellClass ?? headerCellClass}>
+									{nestedColumn.label}
+								</TableLayout.ThNested>)
 							:
-							<TableLayout.ThNested 
+							<TableLayout.ThNested
 								key={`${column.key}-nested`}
-								className={nestedHeaderCellClass ?? headerCellClass}/>
-							)}
+								className={nestedHeaderCellClass ?? headerCellClass} />
+						)}
 					</TableLayout.Row>
 				}
 			</TableLayout.Thead>
 			<TableLayout.Body className={bodyClass}>
 				{data.map((item: any) => (
-					<TableLayout.Row 
-						key={item.key} 
-						className={rowClass} 
-						onClick={() => dataTable.onRowClick?.({ item })} 
+					<TableLayout.Row
+						key={item.key}
+						className={rowClass}
+						onClick={() => dataTable.onRowClick?.({ item })}
 						data-clickable={dataAttr(Boolean(dataTable.onRowClick))}>
-							{dataTable.columns.map(({ key, Cell, ...column }: TableColumnType) => {
-								if (!column.nestedColumns) {
-									return <Cell key={key} className={cellClass} data={item} />;
-								}
-								return (
-									column.nestedColumns.map(nestedColumn => 
-									<nestedColumn.Cell 
-										key={nestedColumn.key} 
-										className={cellClass} 
+						{dataTable.columns.map(({ key, Cell, ...column }: TableColumnType) => {
+							if (!column.nestedColumns) {
+								return <Cell key={key} className={cellClass} data={item} />;
+							}
+							return (
+								column.nestedColumns.map(nestedColumn =>
+									<nestedColumn.Cell
+										key={nestedColumn.key}
+										className={cellClass}
 										data={item} />
-									)
-							)})}
+								)
+							)
+						})}
 					</TableLayout.Row>
 				))}
 			</TableLayout.Body>

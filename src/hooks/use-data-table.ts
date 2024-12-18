@@ -8,7 +8,7 @@ export const useDataTable = ({ key, columns, ...props }: DataTableLiteType) => {
 	useEffect(() => {
 		const updatedModel = new DataTableModel({ key, columns, ...props });
 		setCurrentModel(updatedModel)
-	}, [key, columns])
+	}, [key, columns, props])
 
 	return currentModel;
 }

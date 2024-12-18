@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { makeAutoObservable } from 'mobx';
 import { ReactNode } from "react";
 
@@ -49,7 +51,7 @@ class DataTable {
 
 	constructor({ key, columns, saveLayoutView, hasDraggableColumns, isStickyHeader, onRowClick, defaultColumnWidth = 'auto' }: DataTableLiteType) {
 		makeAutoObservable(this);
-		// @ts-expect-error
+		// @ts-expect-error localstorage parse issue
 		const savedColumns = JSON.parse(localStorage.getItem(key));
 		this.key = key;
 		this.saveLayoutView = saveLayoutView ?? false;
@@ -114,7 +116,7 @@ class DataTable {
 		this.columnsWidth = customColumnsWidth;
 
 		// update localstorage saved columns
-		// @ts-expect-error
+		// @ts-expect-error localstorage parse issue
 		const savedColumns = JSON.parse(localStorage.getItem(this.key));
 		const savedItem = savedColumns.splice(index, 1)[0];
 		savedColumns.splice(toIndex, 0, savedItem);

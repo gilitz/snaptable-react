@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { ReactNode, useRef } from 'react';
-// @ts-expect-error
+// @ts-expect-error import issue
 import styled, { StyledComponent } from 'styled-components';
 import { DataTableType } from '../models/data-table-model';
 import { observer } from 'mobx-react';
@@ -19,17 +21,17 @@ type HeaderType = {
 	children: ReactNode
 };
 
-type StyledTableProps = {};
+type StyledTableProps = object;
 
 type StyledTableRowProps = {
-	onRowClick?: ({ item }: {item: any}) => void
+	onRowClick?: ({ item }: { item: any }) => void
 };
 
-type StyledTableHeaderProps = {};
+type StyledTableHeaderProps = object;
 
-type StyledTableBodyProps = {};
+type StyledTableBodyProps = object;
 
-type StyledTableTheadProps = {};
+type StyledTableTheadProps = object;
 
 const StyledTable: StyledComponent<'table', any, StyledTableProps, never> = styled.table`
 	width: max-content;
@@ -73,40 +75,40 @@ const Th: StyledComponent<'th', any, StyledTableHeaderProps, never> = styled(
 	observer(({ children, dataTable, index, colSpan, resizeable = true, ...props }: HeaderType) => {
 		const ref = useRef<any>(null);
 
-		const handleMouseDown = (index: number) => (event:MouseEvent) => {
+		const handleMouseDown = (index: number) => (event: MouseEvent) => {
 			event.preventDefault();
 			const startX = event.clientX;
-			let widthWithPadding = ref.current?.getBoundingClientRect()?.width;
+			const widthWithPadding = ref.current?.getBoundingClientRect()?.width;
 			let updatedColumnsWidth = [...dataTable.columnsWidth];
 
 			const handleMouseMove = (event: MouseEvent) => {
-			const newWidth = Math.trunc(Math.max(widthWithPadding + event.clientX - startX, 80));
-			
-			updatedColumnsWidth = updatedColumnsWidth.map((column, colIndex) =>
-				colIndex === index ? { ...column, width: newWidth } : column);
+				const newWidth = Math.trunc(Math.max(widthWithPadding + event.clientX - startX, 80));
 
-			dataTable.setColumnsWidth(updatedColumnsWidth)
-			localStorage.setItem(dataTable.key, JSON.stringify(updatedColumnsWidth));
+				updatedColumnsWidth = updatedColumnsWidth.map((column, colIndex) =>
+					colIndex === index ? { ...column, width: newWidth } : column);
+
+				dataTable.setColumnsWidth(updatedColumnsWidth)
+				localStorage.setItem(dataTable.key, JSON.stringify(updatedColumnsWidth));
 			};
-		
+
 			const handleMouseUp = () => {
-			document.removeEventListener('mousemove', handleMouseMove);
-			document.removeEventListener('mouseup', handleMouseUp);
+				document.removeEventListener('mousemove', handleMouseMove);
+				document.removeEventListener('mouseup', handleMouseUp);
 			};
-		
+
 			document.addEventListener('mousemove', handleMouseMove);
 			document.addEventListener('mouseup', handleMouseUp);
 		};
 
 		return (
-			<th {...props} ref={ref} colSpan={colSpan} 
+			<th {...props} ref={ref} colSpan={colSpan}
 				style={{ width: dataTable.columnsWidth[index].width, minWidth: dataTable.columns[index].width ?? ref.current?.width }}>
 				<THContainer>
 					{children}
 					{resizeable && <ResizeHandler className="resize-handler" onMouseDown={handleMouseDown(index)} />}
 				</THContainer>
 			</th>)
-}))`
+	}))`
 	display: table-cell;
 	position: relative;
 
@@ -127,7 +129,7 @@ const ThNested: StyledComponent<'th', any, StyledTableHeaderProps, never> = styl
 		return (
 			<th {...props} style={{ width: 'unset' }} />
 		);
-}))`
+	}))`
 	display: table-cell;
 
 	&[data-draggable] {

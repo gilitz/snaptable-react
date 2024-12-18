@@ -8,17 +8,15 @@ export const useResizeObserver = ({ ref }: {ref: RefObject<HTMLElement>}) => {
 		if (!element) return;
 	
 		const resizeObserver = new ResizeObserver((entries) => {
-		  for (let entry of entries) {
-			setWidth(entry.contentRect.width);
-		  }
+			for (const entry of entries) {
+				setWidth(entry.contentRect.width);
+			}
 		});
 	
 		resizeObserver.observe(element);
 	
-		return () => {
-		  resizeObserver.unobserve(element);
-		};
-	  }, []);
+		return () => { resizeObserver.unobserve(element) };
+	}, [ref]);
 
-	  return width;
+	return width;
 };

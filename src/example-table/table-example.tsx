@@ -2,11 +2,11 @@ import { useDataTable } from "../hooks/use-data-table";
 import { Table } from "./table";
 
 export const TableExample = (() => {
-	const dataTable = useDataTable({ 
-		key: 'gilitz-table', 
-		columns: tableColumns, 
-		saveLayoutView: true, 
-		isStickyHeader: false, 
+	const dataTable = useDataTable({
+		key: 'gilitz-table',
+		columns: tableColumns,
+		saveLayoutView: true,
+		isStickyHeader: false,
 	})
 	return (
 		<Table dataTable={dataTable} data={mockData} />
@@ -14,17 +14,19 @@ export const TableExample = (() => {
 });
 
 const tableColumns = [
-	{ width: 300, key: '1', resizeable: false, label: 'First', Cell: ({ data, ...props }: { data: any }) => <Table.Cell {...props}>{data.name}</Table.Cell>},
-	{ key: '2', label: 'Second', Cell: ({ data, ...props }: { data: any }) => <Table.Cell {...props}>{data.label}</Table.Cell>,
-	nestedColumns: [
-		{ key: 'nested1', label: 'nested 1', Cell: ({ data, ...props }: { data: any }) => <Table.Cell {...props}>{data.nestedOne}</Table.Cell> },
-		{ key: 'nested2', label: 'nested 2', Cell: ({ data, ...props }: { data: any }) => <Table.Cell {...props}>{data.nestedTwo}</Table.Cell> },
-	]  },
-	{ key: '3', label: 'Third', Cell: ({ data, ...props }: { data: any }) => <Table.Cell {...props}>{data.name}</Table.Cell> },
-	{ key: '4', label: 'Fourth', Cell: ({ data, ...props }: { data: any }) => <Table.Cell {...props}>{data.label}</Table.Cell> },
-	{ key: '5', label: 'Fifth', Cell: ({ data, ...props }: { data: any }) => <Table.Cell {...props}>{data.label}</Table.Cell> },
-	{ key: '6', label: 'Sixth', Cell: ({ data, ...props }: { data: any }) => <Table.Cell {...props}>{data.label}</Table.Cell> },
-	{ key: '7', label: 'Seventh', Cell: ({ data, ...props }: { data: any }) => <Table.Cell {...props}>{data.label}</Table.Cell> }
+	{ width: 300, key: '1', resizeable: false, label: 'First', Cell: ({ data, ...props }: { data: { name: string } }) => <Table.Cell {...props}>{data.name}</Table.Cell> },
+	{
+		key: '2', label: 'Second', Cell: ({ data, ...props }: { data: { label: string } }) => <Table.Cell {...props}>{data.label}</Table.Cell>,
+		nestedColumns: [
+			{ key: 'nested1', label: 'nested 1', Cell: ({ data, ...props }: { data: { nestedOne: string } }) => <Table.Cell {...props}>{data.nestedOne}</Table.Cell> },
+			{ key: 'nested2', label: 'nested 2', Cell: ({ data, ...props }: { data: { nestedTwo: string } }) => <Table.Cell {...props}>{data.nestedTwo}</Table.Cell> },
+		]
+	},
+	{ key: '3', label: 'Third', Cell: ({ data, ...props }: { data: { name: string } }) => <Table.Cell {...props}>{data.name}</Table.Cell> },
+	{ key: '4', label: 'Fourth', Cell: ({ data, ...props }: { data: { label: string } }) => <Table.Cell {...props}>{data.label}</Table.Cell> },
+	{ key: '5', label: 'Fifth', Cell: ({ data, ...props }: { data: { label: string } }) => <Table.Cell {...props}>{data.label}</Table.Cell> },
+	{ key: '6', label: 'Sixth', Cell: ({ data, ...props }: { data: { label: string } }) => <Table.Cell {...props}>{data.label}</Table.Cell> },
+	{ key: '7', label: 'Seventh', Cell: ({ data, ...props }: { data: { label: string } }) => <Table.Cell {...props}>{data.label}</Table.Cell> }
 ];
 
 const mockData = [
@@ -34,7 +36,7 @@ const mockData = [
 	{ key: 'item4', name: 'item 4', label: '4' },
 	{ key: 'item5', name: 'item 5', label: '5' },
 	{ key: 'item6', name: 'item 6', label: '6' },
-	{ key: 'item7', name: 'item 7', label: '7' },	
+	{ key: 'item7', name: 'item 7', label: '7' },
 	{ key: 'item8', name: 'item 8', label: '8' },
 	{ key: 'item9', name: 'item 9', label: '9' },
 	{ key: 'item10', name: 'item 10', label: '10' },
