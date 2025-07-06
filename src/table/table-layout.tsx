@@ -1,6 +1,5 @@
 import { ReactNode, useRef } from 'react';
-// @ts-expect-error
-import styled, { StyledComponent } from 'styled-components';
+import styled from 'styled-components';
 import { DataTableType } from '../models/data-table-model';
 import { observer } from 'mobx-react';
 
@@ -19,19 +18,7 @@ type HeaderType = {
 	children: ReactNode
 };
 
-type StyledTableProps = {};
-
-type StyledTableRowProps = {
-	onRowClick?: ({ item }: {item: any}) => void
-};
-
-type StyledTableHeaderProps = {};
-
-type StyledTableBodyProps = {};
-
-type StyledTableTheadProps = {};
-
-const StyledTable: StyledComponent<'table', any, StyledTableProps, never> = styled.table`
+const StyledTable = styled.table`
 	width: max-content;
 	border-collapse: collapse;
 	table-layout: fixed;
@@ -63,13 +50,13 @@ const ResizeHandler = styled.div`
 	cursor: col-resize;
 `;
 
-const Tr: StyledComponent<'tr', any, StyledTableRowProps, never> = styled.tr`
+const Tr = styled.tr`
 	&[data-clickable] {
 		cursor: pointer;
 	}
 `;
 
-const Th: StyledComponent<'th', any, StyledTableHeaderProps, never> = styled(
+const Th = styled(
 	observer(({ children, dataTable, index, colSpan, resizeable = true, ...props }: HeaderType) => {
 		const ref = useRef<any>(null);
 
@@ -121,7 +108,7 @@ const Th: StyledComponent<'th', any, StyledTableHeaderProps, never> = styled(
 	}
 `;
 
-const ThNested: StyledComponent<'th', any, StyledTableHeaderProps, never> = styled(
+const ThNested = styled(
 	observer((props: HeaderType) => {
 		return (
 			<th {...props} style={{ width: 'unset' }} />
@@ -134,16 +121,16 @@ const ThNested: StyledComponent<'th', any, StyledTableHeaderProps, never> = styl
 	}
 `;
 
-const Body: StyledComponent<'tbody', any, StyledTableBodyProps, never> = styled.tbody``;
+const Body = styled.tbody``;
 
-const Thead: StyledComponent<'thead', any, StyledTableTheadProps, never> = styled.thead`
+const Thead = styled.thead`
 	&[data-sticky] {
 		position: sticky;
 		top: 0;
 	}
 `;
 
-const Footer: StyledComponent<'tfoot', any, StyledTableTheadProps, never> = styled.tfoot``;
+const Footer = styled.tfoot``;
 
 export const TableLayout: React.FC<TableLayoutType> & {
 	Body: typeof Body;

@@ -1,20 +1,33 @@
 {
   "name": "snaptable-react",
-  "version": "1.0.6",
+  "version": "2.0.0",
   "type": "module",
-  "main": "dist/index.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prepublishOnly": "npm run build"
   },
-  "dependencies": {
-    "mobx": "^6.13.1",
-    "mobx-react": "^9.1.1",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "styled-components": "^6.1.12"
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0",
+    "mobx": ">=6.0.0",
+    "mobx-react": ">=9.0.0",
+    "styled-components": ">=5.0.0"
   },
   "devDependencies": {
     "@types/react": "^18.3.3",
@@ -26,9 +39,15 @@
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.7",
     "typescript": "^5.2.2",
-    "vite": "^5.3.4"
+    "vite": "^5.3.4",
+    "vite-plugin-dts": "^4.0.3",
+    "mobx": "^6.13.1",
+    "mobx-react": "^9.1.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "styled-components": "^6.1.12"
   },
-  "description": "This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.",
+  "description": "A React table component with drag-and-drop columns, resizable columns, and persistent layout views. Built with MobX and styled-components.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/gilitz/snaptable-react.git"
@@ -36,9 +55,13 @@
   "keywords": [
     "react",
     "react-table",
-    "snapshot-table",
     "table",
-    "snapshot"
+    "drag-drop",
+    "resizable",
+    "columns",
+    "mobx",
+    "styled-components",
+    "typescript"
   ],
   "author": "gilitz",
   "license": "ISC",
