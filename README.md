@@ -21,6 +21,16 @@ npm install snaptable-react
 yarn add snaptable-react
 ```
 
+### Peer Dependencies
+
+Starting from v2.0.0, you also need to install the peer dependencies:
+
+```bash
+npm install react mobx mobx-react styled-components
+# or
+yarn add react mobx mobx-react styled-components
+```
+
 <br />
 
 # Usage
@@ -29,7 +39,8 @@ yarn add snaptable-react
 
 Below is a basic example of how to use snaptable-react to create a custom table.
 
-#### Note ***
+#### Note \*\*\*
+
 snaptable-react does not come with any CSS. You are free to style your table as you like using your own CSS.
 
 <br />
@@ -43,7 +54,9 @@ import { SnapTable, useDataTable, SnapTableType } from 'snaptable-react';
 <br />
 
 ### Define Your Columns Structure
+
 Each column should have the following properties: key, label, Cell, and optionally resizable and width.
+
 ```
 const tableColumns = [
   { key: 'name', label: 'Name', resizable: true, Cell: ({ data }) => <td>{data.name}</td>, width: 200,
@@ -53,7 +66,7 @@ const tableColumns = [
 	]},
   { key: 'age', label: 'Age', resizable: true, Cell: ({ data, ...props }) => <td {...props}>{data.age}</td> },
   { key: 'email', label: 'Email', width: 200, Cell: ({ data, ...props }) => <td {...props}>{data.email}</td> },
-  
+
   // Add more columns as needed
 ];
 ```
@@ -61,6 +74,7 @@ const tableColumns = [
 <br />
 
 ### Use the useDataTable Hook
+
 Pass the columns and table properties to the useDataTable hook.
 
 ```
@@ -75,6 +89,7 @@ const dataModel = useDataTable({
 <br />
 
 ### Create Your Custom Table Component
+
 Wrap the SnapTable component, adding your own CSS to style the table.
 
 ```
@@ -99,6 +114,7 @@ const StyledTable = (props) => {
 <br />
 
 ### Putting it all together
+
 Now you have your own styled table, and you can create as many tables as you want like this:
 
 ```
@@ -146,8 +162,6 @@ The `useDataTable` hook accepts an object with the following properties:
 - **isStickyHeader** (boolean): Enable/Disable sticky header in table. you might need to adjust the max-height of the TableContainer (depends on the screen size and number of rows)
 - **onRowClick** ({ item (the item for the row) }): when click on row run this function
 
-
-
 ### SnapTable Component
 
 The `SnapTable` component accepts the following props:
@@ -162,7 +176,6 @@ The `SnapTable` component accepts the following props:
 - **headerCellClass?** (string): classname to change header-cell (th) element's css style
 - **nestedHeaderCellClass?** (string): classname to change header-cell (th) element's css style (if null, will use headerCellClass instead)
 - **cellClass?** (string): classname to change cell (td) element's css style
-
 
 ### SnapTableType
 
@@ -184,13 +197,55 @@ Table `Column` can accepts the following props:
 <br />
 <br />
 
+## Working Example:
 
-## Working Example: 
-
-Clone repo, run ```npm install``` and then ```npm run dev``` 
+Clone repo, run `npm install` and then `npm run dev`
 
 <br />
 <br />
 
-# Enjoy 
+# Changelog
+
+## v2.0.0 - Major Breaking Changes
+
+### 🚨 Breaking Changes
+
+1. **Peer Dependencies**: React, MobX, and styled-components are now peer dependencies instead of regular dependencies
+
+   - **Before v2.0.0**: These packages were automatically installed
+   - **Now**: You must install them manually: `npm install react mobx mobx-react styled-components`
+   - **Why**: Prevents version conflicts and reduces bundle size
+
+2. **Build Output**: Package now provides both CommonJS and ES modules
+
+   - **Before v2.0.0**: Only TypeScript source files
+   - **Now**: Compiled JavaScript with proper TypeScript declarations
+
+3. **Entry Point**: Main entry point changed from TypeScript to compiled JavaScript
+   - **Before v2.0.0**: `dist/index.ts`
+   - **Now**: `dist/index.js` (with `dist/index.mjs` for ES modules)
+
+### ✅ Improvements
+
+- Better TypeScript support with proper declaration files
+- Smaller bundle size for consuming applications
+- Better compatibility with different bundlers
+- Follows npm best practices for React libraries
+
+### 🔄 Migration Guide
+
+If upgrading from v1.x:
+
+1. Install peer dependencies:
+
+   ```bash
+   npm install react mobx mobx-react styled-components
+   ```
+
+2. No code changes needed - the API remains the same!
+
+---
+
+# Enjoy
+
 ### Feel free to contact me for any question, suggestion or just a small talk :)
