@@ -1,4 +1,4 @@
-# SnapTable React v3.0.0
+# SnapTable React v3.1.0
 
 **A Truly Headless React Table Library**
 
@@ -112,6 +112,7 @@ const dataTable = useDataTable({
   columns: [...],                   // Column definitions
   hasDraggableColumns: true,        // Enable column reordering
   isStickyHeader: true,             // Sticky header behavior
+  hasStickyColumns: true,           // Enable sticky columns
   saveLayoutView: true,             // Persist column widths/order
   onRowClick: ({ item }) => {...}   // Row click handler
 });
@@ -129,11 +130,12 @@ tableState.columns; // Column definitions
 tableState.data; // Table data
 tableState.config; // Table configuration
 tableState.columnWidths; // Current column widths
-tableState.draggedIndex; // Currently dragged column
-tableState.hoveredIndex; // Currently hovered column
+tableState.stickyColumns; // Sticky column states
+tableState.stickyOffsets; // Sticky column positioning offsets
 
 // Available methods:
 tableState.getColumnProps(index); // Get all props for a column header
+tableState.getCellProps(columnIndex); // Get all props for a cell
 tableState.getRowProps(item); // Get all props for a row
 ```
 
@@ -145,9 +147,168 @@ tableState.getRowProps(item); // Get all props for a row
   label: 'Display Name',               // Column header text
   Cell: ({ data, ...props }) => <td>{data.field}</td>,  // Cell renderer
   resizeable: true,                    // Enable column resizing
+  sticky: false,                       // Make column sticky (requires hasStickyColumns: true)
   width: 200,                          // Initial width (optional)
   minWidth: 100,                       // Minimum width (optional)
   maxWidth: 500                        // Maximum width (optional)
+}
+```
+
+## 📌 Sticky Columns
+
+Enable sticky columns to pin important columns to the left side of the table during horizontal scrolling.
+
+### Basic Sticky Columns Setup
+
+```tsx
+const dataTable = useDataTable({
+  key: "my-table",
+  hasStickyColumns: true, // Enable sticky columns feature
+  columns: [
+    {
+      key: "name",
+      label: "Name",
+      sticky: true, // Pin this column to the left
+      Cell: ({ data }) => <td>{data.name}</td>,
+      resizeable: true,
+    },
+    {
+      key: "id",
+      label: "ID",
+      sticky: true, // This will be the second sticky column
+      Cell: ({ data }) => <td>{data.id}</td>,
+      resizeable: true,
+    },
+    {
+      key: "email",
+      label: "Email",
+      Cell: ({ data }) => <td>{data.email}</td>,
+      resizeable: true,
+    },
+    // ... more columns
+  ],
+});
+```
+
+### Implementing Sticky Columns in Your Table
+
+```tsx
+function StickyTable() {
+  const tableState = useTable(dataTable, data);
+
+  return (
+    <div style={{ overflowX: "auto", width: "100%" }}>
+      <table style={{ minWidth: "800px" }}>
+        <thead>
+          <tr>
+            {tableState.columns.map((column, index) => {
+              const props = tableState.getColumnProps(index);
+              return (
+                <th
+                  key={column.key}
+                  style={{
+                    width: props.width,
+                    position: props.isSticky ? "sticky" : "relative",
+                    left: props.isSticky ? `${props.stickyOffset}px` : "auto",
+                    zIndex: props.isSticky ? 10 : 1,
+                    backgroundColor: props.isSticky ? "#f8f9fa" : "white",
+                  }}
+                  draggable={props.isDraggable}
+                  onDragStart={props.onDragStart}
+                  onDragOver={props.onDragOver}
+                  onDrop={props.onDrop}
+                >
+                  {column.label}
+                  {/* Toggle sticky button */}
+                  <button
+                    onClick={() => props.onToggleSticky()}
+                    style={{ marginLeft: "8px" }}
+                  >
+                    {props.isSticky ? "📌" : "📍"}
+                  </button>
+                  {/* Resize handle */}
+                  {props.isResizable && (
+                    <div
+                      style={{
+                        position: "absolute",
+                        right: 0,
+                        top: 0,
+                        width: "5px",
+                        height: "100%",
+                        cursor: "col-resize",
+                      }}
+                      onMouseDown={(e) => props.onResizeStart(e.nativeEvent)}
+                    />
+                  )}
+                </th>
+              );
+            })}
+          </tr>
+        </thead>
+        <tbody>
+          {tableState.data.map((item) => {
+            const rowProps = tableState.getRowProps(item);
+            return (
+              <tr key={item.key} onClick={rowProps.onClick}>
+                {tableState.columns.map((column, columnIndex) => {
+                  const cellProps = tableState.getCellProps(columnIndex);
+                  return (
+                    <td
+                      key={column.key}
+                      style={{
+                        width: cellProps.width,
+                        position: cellProps.isSticky ? "sticky" : "relative",
+                        left: cellProps.isSticky
+                          ? `${cellProps.stickyOffset}px`
+                          : "auto",
+                        zIndex: cellProps.isSticky ? 5 : 1,
+                        backgroundColor: cellProps.isSticky
+                          ? "#f8f9fa"
+                          : "white",
+                      }}
+                    >
+                      <column.Cell data={item} />
+                    </td>
+                  );
+                })}
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+```
+
+### Sticky Columns Features
+
+- **Multiple Sticky Columns** - Pin multiple columns that stack from left to right
+- **Dynamic Toggle** - Use `onToggleSticky()` to dynamically pin/unpin columns
+- **Automatic Positioning** - Precise positioning with `stickyOffset` values
+- **Resize Support** - Sticky columns work seamlessly with column resizing
+- **Drag & Drop Constraints** - Sticky columns can only be reordered among other sticky columns
+- **State Persistence** - Sticky states are saved to localStorage when `saveLayoutView` is enabled
+
+### CSS Tips for Sticky Columns
+
+```css
+/* Ensure smooth scrolling */
+.table-container {
+  overflow-x: auto;
+  scroll-behavior: smooth;
+}
+
+/* Add visual distinction for sticky columns */
+.sticky-column {
+  background-color: #f8f9fa;
+  border-right: 2px solid #dee2e6;
+  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Hover effects for sticky columns */
+.sticky-column:hover {
+  background-color: #e9ecef;
 }
 ```
 
@@ -238,7 +399,8 @@ return (
 - **Column Resizing** - Drag column borders to resize
 - **Column Reordering** - Drag & drop column headers to reorder
 - **Sticky Headers** - Keep headers visible while scrolling
-- **Layout Persistence** - Save column widths and order to localStorage
+- **Sticky Columns** - Pin columns to the left side during horizontal scrolling
+- **Layout Persistence** - Save column widths, order, and sticky states to localStorage
 - **Row Click Handlers** - Handle row interactions
 - **Flexible Data** - Works with any data structure
 - **TypeScript** - Full TypeScript support with proper types

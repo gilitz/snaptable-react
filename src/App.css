@@ -216,11 +216,15 @@ body {
 }
 
 .hero-features {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  /* display: grid; */
+  /* grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); */
   gap: 1rem;
   margin-bottom: 2rem;
-  width: 100%;
+  width: 700px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -355,6 +359,8 @@ body {
   margin-bottom: 0;
 }
 
+
+
 /* Table Container */
 .table-container {
   max-width: 1400px;
@@ -429,6 +435,8 @@ body {
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  min-width: 0; /* Allow content to shrink */
+  max-width: 100%; /* Prevent content overflow */
 }
 
 .header-label {
@@ -437,6 +445,67 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: #374151;
+  min-width: 0; /* Allow text to shrink */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1; /* Take available space */
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0; /* Prevent actions from shrinking */
+}
+
+.sticky-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+  padding: 0.25rem;
+  border-radius: 3px;
+}
+
+.sticky-toggle:hover {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.sticky-toggle.active {
+  opacity: 1;
+}
+
+/* Header cell borders */
+.demo-header.has-border {
+  border-right: 1px solid #e5e7eb;
+}
+
+/* Sticky column styling */
+.demo-header.column-sticky {
+  background: #f1f5f9;
+  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+  min-width: 0; /* Prevent content overflow */
+}
+
+.demo-cell.cell-sticky {
+  background: #f8fafc;
+  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.05);
+  min-width: 0; /* Prevent content overflow */
+}
+
+/* Ensure sticky columns don't overlap */
+.demo-header.column-sticky,
+.demo-cell.cell-sticky {
+  box-sizing: border-box;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.demo-cell.has-border {
+  border-right: 1px solid #f1f5f9;
 }
 
 .drag-indicator {

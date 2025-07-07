@@ -11,6 +11,7 @@ export type TableColumnType = {
     label: string | ReactNode;
     width?: number;
     resizeable?: boolean;
+    sticky?: boolean;
     Cell: (props: {
         data: Record<string, unknown>;
     }) => ReactNode;
@@ -20,6 +21,10 @@ type ColumnWidthType = {
     key: string;
     width?: number;
 };
+type StickyColumnType = {
+    key: string;
+    sticky: boolean;
+};
 export interface DataTableLiteType {
     key: string;
     columns: TableColumnType[];
@@ -27,6 +32,7 @@ export interface DataTableLiteType {
     saveLayoutView?: boolean;
     defaultColumnWidth?: number | string;
     isStickyHeader?: boolean;
+    hasStickyColumns?: boolean;
     onRowClick?: ({ item }: {
         item: Record<string, unknown>;
     }) => void;
@@ -35,6 +41,19 @@ export type DataTableType = DataTableLiteType & {
     moveColumn: (index: number, toIndex: number) => void;
     setColumnsWidth: (widths: ColumnWidthType[]) => void;
     columnsWidth: ColumnWidthType[];
+    stickyColumns: StickyColumnType[];
+    setStickyColumns: (stickyColumns: StickyColumnType[]) => void;
+    toggleColumnSticky: (columnKey: string, actualWidth?: number) => void;
+    getStickyColumnsOffsets: () => {
+        [key: string]: number;
+    };
+    updateActualWidths: (headerElements: {
+        [key: string]: HTMLElement;
+    }) => void;
+    getColumnActualWidth: (columnKey: string, fallbackWidth: number) => number;
+    actualRenderedWidths: {
+        [key: string]: number;
+    };
 };
 declare class DataTable {
     key: string;
@@ -42,12 +61,26 @@ declare class DataTable {
     saveLayoutView: boolean;
     hasDraggableColumns: boolean;
     isStickyHeader: boolean;
+    hasStickyColumns: boolean;
     onRowClick: (({ item }: {
         item: Record<string, unknown>;
     }) => void) | undefined;
     columnsWidth: ColumnWidthType[];
-    constructor({ key, columns, saveLayoutView, hasDraggableColumns, isStickyHeader, onRowClick, defaultColumnWidth }: DataTableLiteType);
+    stickyColumns: StickyColumnType[];
+    actualRenderedWidths: {
+        [key: string]: number;
+    };
+    updateActualWidths(headerElements: {
+        [key: string]: HTMLElement;
+    }): void;
+    getColumnActualWidth(columnKey: string, fallbackWidth: number): number;
+    constructor({ key, columns, saveLayoutView, hasDraggableColumns, isStickyHeader, hasStickyColumns, onRowClick, defaultColumnWidth }: DataTableLiteType);
     moveColumn(index: number, toIndex: number): void;
     setColumnsWidth(widths: ColumnWidthType[]): void;
+    setStickyColumns(stickyColumns: StickyColumnType[]): void;
+    toggleColumnSticky(columnKey: string, actualWidth?: number): void;
+    getStickyColumnsOffsets(): {
+        [key: string]: number;
+    };
 }
 export default DataTable;

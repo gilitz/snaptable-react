@@ -229,30 +229,26 @@ function App() {
         width: 280,
         resizeable: true,
         Cell: ({ data }: { data: any }) => (
-          <td className="demo-cell">
-            <div className="employee-info">
-              <div className="employee-avatar">
-                {getEmployeeInitials(data.name)}
-              </div>
-              <div className="employee-details">
-                <div className="employee-name">{data.name}</div>
-                <div className="employee-position">{data.position}</div>
-              </div>
+          <div className="employee-info">
+            <div className="employee-avatar">
+              {getEmployeeInitials(data.name)}
             </div>
-          </td>
+            <div className="employee-details">
+              <div className="employee-name">{data.name}</div>
+              <div className="employee-position">{data.position}</div>
+            </div>
+          </div>
         ),
       },
       {
         key: "department",
         label: "Department",
         width: 140,
-        resizeable: false,
+        resizeable: true,
         Cell: ({ data }: { data: any }) => (
-          <td className="demo-cell">
-            <span className={`department-badge ${getDepartmentClass(data.department)}`}>
-              {data.department}
-            </span>
-          </td>
+          <span className={`department-badge ${getDepartmentClass(data.department)}`}>
+            {data.department}
+          </span>
         ),
       },
       {
@@ -261,9 +257,7 @@ function App() {
         width: 120,
         resizeable: true,
         Cell: ({ data }: { data: any }) => (
-          <td className="demo-cell">
-            <span className="salary-cell">{data.salary}</span>
-          </td>
+          <span className="salary-cell">{data.salary}</span>
         ),
       },
       {
@@ -272,12 +266,10 @@ function App() {
         width: 200,
         resizeable: true,
         Cell: ({ data }: { data: any }) => (
-          <td className="demo-cell">
-            <div className="location-info">
-              <span className="location-icon">📍</span>
-              <span>{data.location}</span>
-            </div>
-          </td>
+          <div className="location-info">
+            <span className="location-icon">📍</span>
+            <span>{data.location}</span>
+          </div>
         ),
       },
       {
@@ -286,9 +278,7 @@ function App() {
         width: 120,
         resizeable: true,
         Cell: ({ data }: { data: any }) => (
-          <td className="demo-cell">
-            <span className="experience-cell">{data.experience}</span>
-          </td>
+          <span className="experience-cell">{data.experience}</span>
         ),
       },
       {
@@ -297,17 +287,16 @@ function App() {
         width: 100,
         resizeable: true,
         Cell: ({ data }: { data: any }) => (
-          <td className="demo-cell">
-            <div className={`status-badge ${data.status.toLowerCase()}`}>
-              <span className="status-dot"></span>
-              {data.status}
-            </div>
-          </td>
+          <div className={`status-badge ${data.status.toLowerCase()}`}>
+            <span className="status-dot"></span>
+            {data.status}
+          </div>
         ),
       },
     ],
     hasDraggableColumns: true,
     isStickyHeader: false,
+    hasStickyColumns: true, // Enable sticky columns functionality
     saveLayoutView: true,
     onRowClick: ({ item }) => {
       console.log("Clicked employee:", item);
@@ -322,7 +311,7 @@ function App() {
       <section className="hero-section">
         <div className="hero-content">
           <div className="hero-badge">
-            <span className="version-badge">v3.0.0</span>
+            <span className="version-badge">v3.1.0</span>
             <span className="new-badge">✨ Truly Headless</span>
           </div>
           
@@ -344,6 +333,7 @@ function App() {
             <div className="feature-pill">🎯 Truly Headless</div>
             <div className="feature-pill">📏 Column Resizing</div>
             <div className="feature-pill">🔄 Drag & Drop</div>
+            <div className="feature-pill">📌 Sticky Columns</div>
             <div className="feature-pill">📱 Mobile Ready</div>
             <div className="feature-pill">⚡ Lightweight</div>
             <div className="feature-pill">🎨 Zero CSS</div>
@@ -374,17 +364,45 @@ function App() {
           </div>
         </div>
 
+
+
         <div className="table-container">
           <table className="demo-table">
             <thead className={`demo-thead ${dataTable.isStickyHeader ? 'sticky' : ''}`}>
               <tr>
                 {table.columns.map((column, index) => {
                   const props = table.getColumnProps(index);
+                  const isLastColumn = index === table.columns.length - 1;
+                  
+                  // Calculate z-index for sticky columns based on their sticky position
+                  let zIndex = 1;
+                  if (props.isSticky) {
+                    // Count how many sticky columns come before this one
+                    let stickyIndex = 0;
+                    for (let i = 0; i < index; i++) {
+                      const prevProps = table.getColumnProps(i);
+                      if (prevProps.isSticky) {
+                        stickyIndex++;
+                      }
+                    }
+                    // First sticky column gets highest z-index
+                    zIndex = 100 - stickyIndex;
+                  }
+                  
                   return (
                     <th
                       key={column.key}
-                      className={`demo-header ${dataTable.isStickyHeader ? 'sticky' : ''}`}
-                      style={{ width: props.width }}
+                      ref={(headerRef) => {
+                        // Register the header element reference for accurate width calculations
+                        props.registerHeaderRef(headerRef);
+                      }}
+                      className={`demo-header ${dataTable.isStickyHeader ? 'sticky' : ''} ${props.isSticky ? 'column-sticky' : ''} ${!isLastColumn ? 'has-border' : ''}`}
+                      style={{ 
+                        width: props.width,
+                        left: props.isSticky ? `${Math.floor(props.stickyOffset)}px` : undefined,
+                        position: props.isSticky ? 'sticky' : 'relative',
+                        zIndex: zIndex,
+                      }}
                       draggable={props.isDraggable}
                       onDragStart={props.onDragStart}
                       onDragOver={props.onDragOver}
@@ -392,14 +410,29 @@ function App() {
                     >
                       <div className="header-content">
                         <span className="header-label">{column.label}</span>
-                        {props.isDraggable && column.key !== 'department' && (
-                          <span className="drag-indicator">⋮⋮</span>
-                        )}
+                        <div className="header-actions">
+                          <button
+                            className={`sticky-toggle ${props.isSticky ? 'active' : ''}`}
+                            onClick={(e) => {
+                              const headerElement = (e.target as HTMLElement).closest('th') as HTMLElement;
+                              props.onToggleSticky(headerElement);
+                            }}
+                            title={props.isSticky ? 'Unpin column' : 'Pin column to left'}
+                          >
+                            {props.isSticky ? '📌' : '📍'}
+                          </button>
+                          {props.isDraggable && column.key !== 'department' && (
+                            <span className="drag-indicator">⋮⋮</span>
+                          )}
+                        </div>
                       </div>
                       {props.isResizable && (
                         <div
                           className="resize-handle"
-                          onMouseDown={(e) => props.onResizeStart(e.nativeEvent)}
+                          onMouseDown={(e) => {
+                            const headerElement = (e.target as HTMLElement).closest('th') as HTMLElement;
+                            props.onResizeStart(e.nativeEvent, headerElement);
+                          }}
                         />
                       )}
                     </th>
@@ -416,9 +449,40 @@ function App() {
                     className="demo-row"
                     onClick={rowProps.onClick}
                   >
-                    {table.columns.map(({ key, Cell }) => (
-                      <Cell key={key} data={employee} />
-                    ))}
+                    {table.columns.map((column, columnIndex) => {
+                      const cellProps = table.getCellProps(columnIndex);
+                      const isLastColumn = columnIndex === table.columns.length - 1;
+                      
+                      // Calculate z-index for sticky cells based on their sticky position
+                      let cellZIndex = 1;
+                      if (cellProps.isSticky) {
+                        // Count how many sticky columns come before this one
+                        let stickyIndex = 0;
+                        for (let i = 0; i < columnIndex; i++) {
+                          const prevCellProps = table.getCellProps(i);
+                          if (prevCellProps.isSticky) {
+                            stickyIndex++;
+                          }
+                        }
+                        // First sticky column gets highest z-index
+                        cellZIndex = 50 - stickyIndex;
+                      }
+                      
+                      return (
+                        <td
+                          key={column.key}
+                          className={`demo-cell ${cellProps.isSticky ? 'cell-sticky' : ''} ${!isLastColumn ? 'has-border' : ''}`}
+                          style={{
+                            width: cellProps.width,
+                            left: cellProps.isSticky ? `${Math.floor(cellProps.stickyOffset)}px` : undefined,
+                            position: cellProps.isSticky ? 'sticky' : 'relative',
+                            zIndex: cellZIndex,
+                          }}
+                        >
+                          <column.Cell data={employee} />
+                        </td>
+                      );
+                    })}
                   </tr>
                 );
               })}
@@ -449,7 +513,7 @@ function App() {
           <div className="feature-card">
             <span className="feature-icon">🔧</span>
             <h3>Highly Customizable</h3>
-            <p>Every aspect is configurable. Column resizing, drag & drop, sticky headers, and more - all optional and customizable.</p>
+            <p>Every aspect is configurable. Column resizing, drag & drop, sticky headers, sticky columns, and more - all optional and customizable.</p>
           </div>
           
           <div className="feature-card">
@@ -479,7 +543,7 @@ function App() {
           <a href="https://github.com/your-username/snaptable-react" className="footer-link"> GitHub</a> • 
           <a href="https://npmjs.com/package/snaptable-react" className="footer-link"> npm</a>
         </p>
-        <p className="footer-version">snaptable-react v3.0.0</p>
+        <p className="footer-version">snaptable-react v3.1.0</p>
       </footer>
     </div>
   );
