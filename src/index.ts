@@ -1,4 +1,3 @@
-// Truly headless table library - only hooks and types
 export { default as useDataTable } from './hooks/use-data-table';
 export { useTable } from './hooks/use-table';
 export { default as useDragAndDrop } from './hooks/use-drag-drop';

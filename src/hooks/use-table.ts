@@ -2,7 +2,6 @@ import { useObserver } from 'mobx-react';
 import { useCallback } from 'react';
 import DataTable from '../models/data-table-model';
 
-// Truly headless table hook - only provides data, state, and event handlers
 export function useTable<T extends Record<string, unknown>>(
 	dataTable: DataTable,
 	data: T[]
