@@ -1,37 +1,52 @@
 import { useState } from 'react';
 
-const useDragAndDrop = () => {
+const useDragAndDrop = <T>(
+	onDragStart?: (item: T, index: number) => void,
+	onDragEnd?: (fromIndex: number, toIndex: number) => void
+) => {
+	const [draggedItem, setDraggedItem] = useState<T | null>(null);
+	const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+	const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
-	const [draggedIndex, setDraggedIndex] = useState<any>(null);
-	const [hoveredIndex, setHoveredIndex] = useState<any>(null);
-
-	const onDragStart = (index: number, callback?: (index: number) => void) => (event: React.DragEvent<HTMLDivElement>) => {
+	const handleDragStart = (item: T, index: number) => {
+		setDraggedItem(item);
 		setDraggedIndex(index);
-		event.dataTransfer.effectAllowed = 'move';
-		callback?.(index);
+		onDragStart?.(item, index);
 	};
 
-	const onDragOver = (index: number, callback?: (index: number) => void) => (event: React.DragEvent<HTMLDivElement>) => {
-		event.preventDefault();
-		event.dataTransfer.dropEffect = 'move';
+	const handleDragOver = (e: DragEvent) => {
+		e.preventDefault();
+	};
+
+	const handleDragEnter = (index: number) => {
 		setHoveredIndex(index);
-		callback?.(index);
 	};
 
-	const onDrop = (index: number, callback?: (index: number) => void) => (event: React.DragEvent<HTMLDivElement>) => {
-		event.preventDefault();
-		if (draggedIndex === null) return;
-		callback?.(index);
+	const handleDragLeave = () => {
+		setHoveredIndex(null);
+	};
+
+	const handleDrop = (e: DragEvent, toIndex: number) => {
+		e.preventDefault();
+		
+		if (draggedIndex !== null && draggedIndex !== toIndex) {
+			onDragEnd?.(draggedIndex, toIndex);
+		}
+		
+		setDraggedItem(null);
 		setDraggedIndex(null);
 		setHoveredIndex(null);
 	};
 
 	return {
+		draggedItem,
 		draggedIndex,
 		hoveredIndex,
-		onDragStart,
-		onDragOver,
-		onDrop,
+		handleDragStart,
+		handleDragOver,
+		handleDragEnter,
+		handleDragLeave,
+		handleDrop,
 	};
 };
 

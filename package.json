@@ -1,6 +1,6 @@
 {
   "name": "snaptable-react",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -26,8 +26,7 @@
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0",
     "mobx": ">=6.0.0",
-    "mobx-react": ">=9.0.0",
-    "styled-components": ">=5.0.0"
+    "mobx-react": ">=9.0.0"
   },
   "devDependencies": {
     "@types/react": "^18.3.3",
@@ -44,24 +43,27 @@
     "mobx": "^6.13.1",
     "mobx-react": "^9.1.1",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "styled-components": "^6.1.12"
+    "react-dom": "^18.3.1"
   },
-  "description": "A React table component with drag-and-drop columns, resizable columns, and persistent layout views. Built with MobX and styled-components.",
+  "description": "A truly headless React table library providing only hooks and logic for building custom tables. Features column resizing, drag & drop, and layout persistence with zero styling opinions.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/gilitz/snaptable-react.git"
   },
   "keywords": [
     "react",
+    "headless",
+    "headless-ui",
     "react-table",
     "table",
+    "hooks",
     "drag-drop",
     "resizable",
     "columns",
     "mobx",
-    "styled-components",
-    "typescript"
+    "typescript",
+    "unstyled",
+    "customizable"
   ],
   "author": "gilitz",
   "license": "ISC",

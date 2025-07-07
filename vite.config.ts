@@ -7,8 +7,11 @@ export default defineConfig({
   plugins: [
     react(), 
     dts({ 
-      include: ['src'],
-      outDir: 'dist'
+      include: ['src/**/*'],
+      exclude: ['src/main.tsx', 'src/App.tsx', 'src/App.css', 'src/index.css'],
+      outDir: 'dist',
+      insertTypesEntry: true,
+      tsconfigPath: './tsconfig.build.json'
     })
   ],
   build: {
@@ -19,14 +22,13 @@ export default defineConfig({
       fileName: (format) => `index.${format === 'es' ? 'mjs' : 'js'}`
     },
     rollupOptions: {
-      external: ['react', 'react-dom', 'mobx', 'mobx-react', 'styled-components'],
+      external: ['react', 'react-dom', 'mobx', 'mobx-react'],
       output: {
         globals: {
           react: 'React',
           'react-dom': 'ReactDOM',
           mobx: 'mobx',
-          'mobx-react': 'mobxReact',
-          'styled-components': 'styled'
+          'mobx-react': 'mobxReact'
         }
       }
     }

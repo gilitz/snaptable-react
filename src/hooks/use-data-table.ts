@@ -1,16 +1,16 @@
 import DataTableModel, { DataTableLiteType } from "../models/data-table-model";
-import { useEffect, useState } from "react";
+import { useRef } from "react";
 
 export const useDataTable = ({ key, columns, ...props }: DataTableLiteType) => {
-	const model = new DataTableModel({ key, columns, ...props });
-	const [currentModel, setCurrentModel] = useState(model);
+	// Keep the model stable to preserve MobX reactivity
+	const modelRef = useRef<DataTableModel | null>(null);
+	
+	// Only create the model once
+	if (!modelRef.current) {
+		modelRef.current = new DataTableModel({ key, columns, ...props });
+	}
 
-	useEffect(() => {
-		const updatedModel = new DataTableModel({ key, columns, ...props });
-		setCurrentModel(updatedModel)
-	}, [key, columns])
-
-	return currentModel;
+	return modelRef.current;
 }
 
 export default useDataTable;

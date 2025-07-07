@@ -4,7 +4,7 @@ import { ReactNode } from "react";
 type NestedColumnType = {
 	key: string;
 	label?: string | ReactNode;
-	Cell?: any;
+	Cell?: (props: { data: Record<string, unknown> }) => ReactNode;
 };
 
 export type TableColumnType = {
@@ -12,7 +12,7 @@ export type TableColumnType = {
 	label: string | ReactNode;
 	width?: number;
 	resizeable?: boolean;
-	Cell: any;
+	Cell: (props: { data: Record<string, unknown> }) => ReactNode;
 	nestedColumns?: NestedColumnType[];
 }
 
@@ -28,7 +28,7 @@ export interface DataTableLiteType {
 	saveLayoutView?: boolean;
 	defaultColumnWidth?: number | string;
 	isStickyHeader?: boolean;
-	onRowClick?: ({ item }: { item: any }) => void
+	onRowClick?: ({ item }: { item: Record<string, unknown> }) => void
 }
 
 export type DataTableType = DataTableLiteType & {
@@ -57,12 +57,14 @@ class DataTable {
 		this.isStickyHeader = isStickyHeader ?? false;
 		this.onRowClick = onRowClick;
 
+		// Always load saved column widths if they exist
 		this.columnsWidth = columns.map((column) => {
 			const savedColumn = savedColumns?.find(({ key }: ColumnWidthType) => key === column.key);
-			return ({ key: column.key, width: column.width ?? savedColumn?.width ?? defaultColumnWidth });
+			const fallbackWidth = typeof defaultColumnWidth === 'number' ? defaultColumnWidth : undefined;
+			return ({ key: column.key, width: savedColumn?.width ?? column.width ?? fallbackWidth });
 		});
 
-		// load initial view if exists
+		// load initial view if exists and saveLayoutView is enabled
 		if (saveLayoutView) {
 			if (savedColumns) {
 				const newFilteredColumns = columns.filter(column => !savedColumns.map(({ key }: TableColumnType) => key).includes(column.key));
@@ -80,7 +82,8 @@ class DataTable {
 					if (!currentColumn) {
 						return result;
 					}
-					result = [...result, { key: currentColumn.key, width: currentColumn.width ?? savedColumn.width }];
+					const fallbackWidth = typeof defaultColumnWidth === 'number' ? defaultColumnWidth : undefined;
+					result = [...result, { key: currentColumn.key, width: savedColumn.width ?? currentColumn.width ?? fallbackWidth }];
 					return result;
 				}, [])
 
@@ -88,11 +91,17 @@ class DataTable {
 				this.columnsWidth = updatedColumnsWidth.concat(newFilteredColumns.map(({ key, width }) => ({ key, width: width ?? defaultColumnWidth })));
 			}
 			else {
+				// Initialize localStorage with current column widths
 				localStorage.setItem(key, JSON.stringify(this.columnsWidth));
+				this.columns = columns;
 			}
 		}
 		else {
 			this.columns = columns;
+			// Even if saveLayoutView is false, still initialize localStorage for resize functionality
+			if (!savedColumns) {
+				localStorage.setItem(key, JSON.stringify(this.columnsWidth));
+			}
 		}
 	}
 

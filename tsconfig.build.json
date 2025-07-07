@@ -1,0 +1,25 @@
+{
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "outDir": "./dist"
+  },
+  "include": [
+    "src/index.ts",
+    "src/hooks/**/*",
+    "src/models/**/*",
+    "src/types/**/*",
+    "src/utils.ts"
+  ],
+  "exclude": [
+    "src/main.tsx",
+    "src/App.tsx",
+    "src/App.css",
+    "src/index.css",
+    "examples/**/*",
+    "node_modules",
+    "dist"
+  ]
+} 

@@ -1,251 +1,290 @@
-# SnapTable-React
+# SnapTable React v3.0.0
 
-`snaptable-react` is a React package that allows you to create highly customizable tables with features like drag-and-drop columns, resizable columns, and persistent layout views.
+**A Truly Headless React Table Library**
 
-## Features
+SnapTable React is a completely headless table library that provides only hooks and logic - no components, no HTML structure, no CSS. You have 100% control over your table's appearance and behavior.
 
-- **Drag and Drop Columns**: Easily reorder columns by dragging and dropping.
-- **Resizable Columns**: Adjust the width of columns by dragging the edges (unless a fixed width is set).
-- **Persistent Layout Views**: Save the table layout so it persists after a page refresh.
-- **Nested Header Columns**: Add second level row to header. each column's width will be half of parent
+## 🎯 What is "Headless"?
 
-<br />
+- **No UI components** - Only hooks that return state and handlers
+- **No HTML structure** - You build your own `<table>`, `<div>`, or any markup
+- **No CSS** - Zero styling opinions, complete visual control
+- **Pure logic** - Column resizing, drag & drop, persistence, and table state management
 
-## Installation
-
-Install the package using npm or yarn:
+## 📦 Installation
 
 ```bash
 npm install snaptable-react
-# or
-yarn add snaptable-react
 ```
 
-### Peer Dependencies
+## 🚀 Quick Start
 
-Starting from v2.0.0, you also need to install the peer dependencies:
+```tsx
+import { useDataTable, useTable } from "snaptable-react";
 
-```bash
-npm install react mobx mobx-react styled-components
-# or
-yarn add react mobx mobx-react styled-components
-```
+function MyTable() {
+  // Configure your table behavior
+  const dataTable = useDataTable({
+    key: "my-table",
+    columns: [
+      {
+        key: "name",
+        label: "Name",
+        Cell: ({ data }) => <td>{data.name}</td>,
+        resizeable: true,
+      },
+      {
+        key: "email",
+        label: "Email",
+        Cell: ({ data }) => <td>{data.email}</td>,
+        resizeable: true,
+      },
+    ],
+    hasDraggableColumns: true,
+    isStickyHeader: true,
+    saveLayoutView: true,
+  });
 
-<br />
+  // Get table state and handlers
+  const tableState = useTable(dataTable, myData);
 
-# Usage
-
-## Basic Example
-
-Below is a basic example of how to use snaptable-react to create a custom table.
-
-#### Note \*\*\*
-
-snaptable-react does not come with any CSS. You are free to style your table as you like using your own CSS.
-
-<br />
-
-### Import the SnapTable Component and useDataTable Hook
-
-```
-import { SnapTable, useDataTable, SnapTableType } from 'snaptable-react';
-```
-
-<br />
-
-### Define Your Columns Structure
-
-Each column should have the following properties: key, label, Cell, and optionally resizable and width.
-
-```
-const tableColumns = [
-  { key: 'name', label: 'Name', resizable: true, Cell: ({ data }) => <td>{data.name}</td>, width: 200,
-  nestedColumns: [
-		{ key: 'nested1', label: 'nested 1', Cell: ({ data, ...props }: { data: any }) => <td {...props}>{data.nestedOne}</td> },
-		{ key: 'nested2', label: 'nested 2', Cell: ({ data, ...props }: { data: any }) => <td {...props}>{data.nestedTwo}</td> },
-	]},
-  { key: 'age', label: 'Age', resizable: true, Cell: ({ data, ...props }) => <td {...props}>{data.age}</td> },
-  { key: 'email', label: 'Email', width: 200, Cell: ({ data, ...props }) => <td {...props}>{data.email}</td> },
-
-  // Add more columns as needed
-];
-```
-
-<br />
-
-### Use the useDataTable Hook
-
-Pass the columns and table properties to the useDataTable hook.
-
-```
-const dataModel = useDataTable({
-  key, // string name for the table
-  columns,
-  hasDraggableColumns?: true, // Enable/Disable drag-and-drop columns. (default true)
-  saveLayoutView?: true, // Enable/Disable saving the layout view (default false)
-});
-```
-
-<br />
-
-### Create Your Custom Table Component
-
-Wrap the SnapTable component, adding your own CSS to style the table.
-
-```
-const StyledTable = (props) => {
+  // Build your own table with complete control
   return (
-    <SnapTable {...props} tableContainerClass="table-container-class" tableClass='table-class' cellClass='cell-class' headerCellClass='header-cell-class' />
+    <table style={{ width: "100%" }}>
+      <thead>
+        <tr>
+          {tableState.columns.map((column, index) => {
+            const props = tableState.getColumnProps(index);
+            return (
+              <th
+                key={column.key}
+                style={{ width: props.width }}
+                draggable={props.isDraggable}
+                onDragStart={props.onDragStart}
+                onDragOver={props.onDragOver}
+                onDrop={props.onDrop}
+              >
+                {column.label}
+                {props.isResizable && (
+                  <div
+                    style={{
+                      position: "absolute",
+                      right: 0,
+                      top: 0,
+                      width: "5px",
+                      height: "100%",
+                      cursor: "col-resize",
+                    }}
+                    onMouseDown={(e) => props.onResizeStart(e.nativeEvent)}
+                  />
+                )}
+              </th>
+            );
+          })}
+        </tr>
+      </thead>
+      <tbody>
+        {tableState.data.map((item) => {
+          const rowProps = tableState.getRowProps(item);
+          return (
+            <tr key={item.key} onClick={rowProps.onClick}>
+              {tableState.columns.map(({ key, Cell }) => (
+                <Cell key={key} data={item} />
+              ))}
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
   );
-};
-
-
-.table-container-class {
-   /* your css styles here */
 }
-
-.header-cell-class {
-  /* your css styles here */
-}
-
-...
 ```
 
-<br />
+## 🔧 Core Hooks
 
-### Putting it all together
+### `useDataTable(config)`
 
-Now you have your own styled table, and you can create as many tables as you want like this:
+Configure your table's behavior and structure.
 
-```
-import { useDataTable } from 'snaptable-react';
-import StyledTable from './path-of-styled-table'
-
-const tableColumns = [
-  { key: 'name', label: 'Name', resizable: true, Cell: ({ data }) => <td>{data.name}</td>, width: 200,
-  nestedColumns: [
-		{ key: 'nested1', label: 'nested 1', Cell: ({ data, ...props }: { data: any }) => <td {...props}>{data.nestedOne}</td> },
-		{ key: 'nested2', label: 'nested 2', Cell: ({ data, ...props }: { data: any }) => <td {...props}>{data.nestedTwo}</td> },
-	]},
-  { key: 'age', label: 'Age', resizable: true, Cell: ({ data, ...props }) => <td {...props}>{data.age}</td> },
-  { key: 'email', label: 'Email', width: 200, Cell: ({ data, ...props }) => <td {...props}>{data.email}</td> },
-
-  // Add more columns as needed
-];
-
-const data = [
-  { key: 1, name: 'John Doe', age: 28, email: 'john@example.com', nested1: 'nested1', nested2: 'nested2' },
-  { key: 2, name: 'Jane Smith', age: 34, email: 'jane@example.com' },
-  // Add more data as needed
-];
-
-const TableExample = (() => {
-	const dataTable = useDataTable({ key: 'gilitz-table', columns: tableColumns, saveLayoutView: true })
-	return (
-		<StyledTable dataTable={dataTable} data={data} />
-	)
+```tsx
+const dataTable = useDataTable({
+  key: 'unique-table-id',           // For layout persistence
+  columns: [...],                   // Column definitions
+  hasDraggableColumns: true,        // Enable column reordering
+  isStickyHeader: true,             // Sticky header behavior
+  saveLayoutView: true,             // Persist column widths/order
+  onRowClick: ({ item }) => {...}   // Row click handler
 });
 ```
 
-<br />
+### `useTable(dataTable, data)`
 
-## Props
+Get table state and event handlers for your markup.
 
-### useDataTable Hook
+```tsx
+const tableState = useTable(dataTable, data);
 
-The `useDataTable` hook accepts an object with the following properties:
+// Available properties:
+tableState.columns; // Column definitions
+tableState.data; // Table data
+tableState.config; // Table configuration
+tableState.columnWidths; // Current column widths
+tableState.draggedIndex; // Currently dragged column
+tableState.hoveredIndex; // Currently hovered column
 
-- **data** (array): Array of items, all items must have a key. each item is a row
-- **columns** (array): Array of column definitions
-- **hasDraggableColumns** (boolean): Enable/Disable drag-and-drop columns
-- **saveLayoutView** (boolean): Enable/Disable saving the layout view
-- **isStickyHeader** (boolean): Enable/Disable sticky header in table. you might need to adjust the max-height of the TableContainer (depends on the screen size and number of rows)
-- **onRowClick** ({ item (the item for the row) }): when click on row run this function
+// Available methods:
+tableState.getColumnProps(index); // Get all props for a column header
+tableState.getRowProps(item); // Get all props for a row
+```
 
-### SnapTable Component
+## 📋 Column Definition
 
-The `SnapTable` component accepts the following props:
+```tsx
+{
+  key: 'field-name',                    // Data field key
+  label: 'Display Name',               // Column header text
+  Cell: ({ data, ...props }) => <td>{data.field}</td>,  // Cell renderer
+  resizeable: true,                    // Enable column resizing
+  width: 200,                          // Initial width (optional)
+  minWidth: 100,                       // Minimum width (optional)
+  maxWidth: 500                        // Maximum width (optional)
+}
+```
 
-- **data** (array): Array of items, where each item must have a key
-- **dataModel** (object): The data model returned from the `useDataTable` hook
-- **tableContainerClass?** (string): classname to change table-container (div) element's css style
-- **tableClass?** (string): classname to change (table) element's css style
-- **bodyClass?** (string): classname to change (body) element's css style
-- **headerRowClass?** (string): classname to change header-row (tr) element's css style
-- **rowClass?** (string): classname to change row (tr) element's css style
-- **headerCellClass?** (string): classname to change header-cell (th) element's css style
-- **nestedHeaderCellClass?** (string): classname to change header-cell (th) element's css style (if null, will use headerCellClass instead)
-- **cellClass?** (string): classname to change cell (td) element's css style
+## 🎨 Styling Examples
 
-### SnapTableType
+### Basic Table
 
-The `SnapTableType` Type is for typescript usage
+```tsx
+// Your CSS
+.my-table {
+  width: 100%;
+  border-collapse: collapse;
+}
 
-<br />
+.my-header {
+  background: #f5f5f5;
+  padding: 12px;
+  border: 1px solid #ddd;
+}
 
-### Column Options:
+.my-cell {
+  padding: 12px;
+  border: 1px solid #ddd;
+}
+```
 
-Table `Column` can accepts the following props:
+### Advanced Styling
 
-- **key** (string): key of the column
-- **label** (string | JSX): label of the column (can be a string or jsx)
-- **Cell** (ReactComponent): the component to render for this header type
-- **resizeable?** (boolean): set if a column is resizeable or not
-- **width?** (number): setting a constant width to a column if resizeable false / setting minWidth to a column of resizeable true
-- **nestedColumns?** (array): array of nested columns (each column has key, label?, Cell)
+```tsx
+// Complete control over appearance
+const StyledCell = ({ data, ...props }) => (
+  <td
+    {...props}
+    className={`cell ${data.status === "active" ? "active" : "inactive"}`}
+    style={{
+      padding: "16px",
+      background: data.priority === "high" ? "#fee" : "white",
+      borderLeft: `4px solid ${data.color}`,
+      transition: "all 0.2s ease",
+    }}
+  >
+    <div className="cell-content">
+      <span className="primary">{data.name}</span>
+      <span className="secondary">{data.description}</span>
+    </div>
+  </td>
+);
+```
 
-<br />
-<br />
+### Grid Layout (Non-Table)
 
-## Working Example:
+```tsx
+// Use divs instead of table elements
+return (
+  <div className="grid-container">
+    <div className="grid-header">
+      {tableState.columns.map((column, index) => {
+        const props = tableState.getColumnProps(index);
+        return (
+          <div
+            key={column.key}
+            className="grid-header-cell"
+            style={{ width: props.width }}
+            draggable={props.isDraggable}
+            onDragStart={props.onDragStart}
+            // ... other props
+          >
+            {column.label}
+          </div>
+        );
+      })}
+    </div>
+    <div className="grid-body">
+      {tableState.data.map((item) => (
+        <div key={item.key} className="grid-row">
+          {tableState.columns.map(({ key, Cell }) => (
+            <Cell key={key} data={item} />
+          ))}
+        </div>
+      ))}
+    </div>
+  </div>
+);
+```
 
-Clone repo, run `npm install` and then `npm run dev`
+## ⚡ Features
 
-<br />
-<br />
+- **Column Resizing** - Drag column borders to resize
+- **Column Reordering** - Drag & drop column headers to reorder
+- **Sticky Headers** - Keep headers visible while scrolling
+- **Layout Persistence** - Save column widths and order to localStorage
+- **Row Click Handlers** - Handle row interactions
+- **Flexible Data** - Works with any data structure
+- **TypeScript** - Full TypeScript support with proper types
+- **Zero Dependencies** - No external dependencies except React
+- **Tiny Bundle** - Only the logic you need, no UI bloat
 
-# Changelog
+## 🔄 Migration from v2.x
 
-## v2.0.0 - Major Breaking Changes
+**v2.x had components:**
 
-### 🚨 Breaking Changes
+```tsx
+// OLD - Had built-in components
+import { SnapTable } from "snaptable-react";
+<SnapTable dataTable={config} data={data} />;
+```
 
-1. **Peer Dependencies**: React, MobX, and styled-components are now peer dependencies instead of regular dependencies
+**v3.x is purely headless:**
 
-   - **Before v2.0.0**: These packages were automatically installed
-   - **Now**: You must install them manually: `npm install react mobx mobx-react styled-components`
-   - **Why**: Prevents version conflicts and reduces bundle size
+```tsx
+// NEW - Only hooks, you build the UI
+import { useDataTable, useTable } from "snaptable-react";
+const tableState = useTable(dataTable, data);
+// Build your own <table> or <div> structure
+```
 
-2. **Build Output**: Package now provides both CommonJS and ES modules
+## 📚 Examples
 
-   - **Before v2.0.0**: Only TypeScript source files
-   - **Now**: Compiled JavaScript with proper TypeScript declarations
+Check the `/examples` folder for complete implementation examples:
 
-3. **Entry Point**: Main entry point changed from TypeScript to compiled JavaScript
-   - **Before v2.0.0**: `dist/index.ts`
-   - **Now**: `dist/index.js` (with `dist/index.mjs` for ES modules)
+- **Basic Table** - Simple table with resizing and drag & drop
+- **Advanced Styling** - Custom cell renderers and complex layouts
+- **Grid Layout** - Using divs instead of table elements
+- **Responsive Design** - Mobile-friendly implementations
 
-### ✅ Improvements
+## 🤝 Contributing
 
-- Better TypeScript support with proper declaration files
-- Smaller bundle size for consuming applications
-- Better compatibility with different bundlers
-- Follows npm best practices for React libraries
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-### 🔄 Migration Guide
+## 📄 License
 
-If upgrading from v1.x:
-
-1. Install peer dependencies:
-
-   ```bash
-   npm install react mobx mobx-react styled-components
-   ```
-
-2. No code changes needed - the API remains the same!
+MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
-# Enjoy
-
-### Feel free to contact me for any question, suggestion or just a small talk :)
+**Remember:** This is a headless library. We provide the logic, you provide the UI. Build tables that perfectly match your design system! 🎨
