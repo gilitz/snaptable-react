@@ -362,19 +362,20 @@ body {
   background: white;
   border-radius: 12px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
-  overflow: hidden;
   border: 1px solid #e2e8f0;
   max-height: 70vh;
   overflow: auto;
+  position: relative;
 }
 
 /* Table Styles */
 .demo-table {
-  width: 100%;
-  min-width: 800px;
+  width: max-content;
+  min-width: 100%;
   border-collapse: separate;
   border-spacing: 0;
   font-size: 0.9rem;
+  table-layout: fixed;
 }
 
 .demo-thead {
@@ -402,6 +403,10 @@ body {
   font-size: 0.875rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-sizing: border-box;
 }
 
 .demo-header.sticky {
@@ -487,6 +492,10 @@ body {
   padding: 0.875rem 0.75rem;
   vertical-align: middle;
   border-bottom: 1px solid #f1f5f9;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-sizing: border-box;
 }
 
 /* Employee Info Styles */

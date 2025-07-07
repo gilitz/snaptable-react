@@ -49,8 +49,8 @@ class DataTable {
 
 	constructor({ key, columns, saveLayoutView, hasDraggableColumns, isStickyHeader, onRowClick, defaultColumnWidth = 'auto' }: DataTableLiteType) {
 		makeAutoObservable(this);
-		// @ts-expect-error
-		const savedColumns = JSON.parse(localStorage.getItem(key));
+		const savedColumnsStr = localStorage.getItem(key);
+		const savedColumns = savedColumnsStr ? JSON.parse(savedColumnsStr) : null;
 		this.key = key;
 		this.saveLayoutView = saveLayoutView ?? false;
 		this.hasDraggableColumns = hasDraggableColumns ?? true;
@@ -69,7 +69,7 @@ class DataTable {
 			if (savedColumns) {
 				const newFilteredColumns = columns.filter(column => !savedColumns.map(({ key }: TableColumnType) => key).includes(column.key));
 				const updatedColumns = savedColumns.reduce((result: TableColumnType[], savedColumn: ColumnWidthType) => {
-					const currentColumn = columns.find(({ key }) => key === savedColumn.key)
+					const currentColumn = columns.filter(({ key }) => key === savedColumn.key)[0];
 					if (!currentColumn) {
 						return result;
 					}
@@ -78,7 +78,7 @@ class DataTable {
 				}, []);
 
 				const updatedColumnsWidth = savedColumns.reduce((result: ColumnWidthType[], savedColumn: ColumnWidthType) => {
-					const currentColumn = columns.find(({ key }) => key === savedColumn.key)
+					const currentColumn = columns.filter(({ key }) => key === savedColumn.key)[0];
 					if (!currentColumn) {
 						return result;
 					}
@@ -123,11 +123,13 @@ class DataTable {
 		this.columnsWidth = customColumnsWidth;
 
 		// update localstorage saved columns
-		// @ts-expect-error
-		const savedColumns = JSON.parse(localStorage.getItem(this.key));
-		const savedItem = savedColumns.splice(index, 1)[0];
-		savedColumns.splice(toIndex, 0, savedItem);
-		localStorage.setItem(this.key, JSON.stringify(savedColumns));
+		const savedColumnsStr = localStorage.getItem(this.key);
+		if (savedColumnsStr) {
+			const savedColumns = JSON.parse(savedColumnsStr);
+			const savedItem = savedColumns.splice(index, 1)[0];
+			savedColumns.splice(toIndex, 0, savedItem);
+			localStorage.setItem(this.key, JSON.stringify(savedColumns));
+		}
 	}
 
 	setColumnsWidth(widths: ColumnWidthType[]) {

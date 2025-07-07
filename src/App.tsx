@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// @ts-nocheck
 import './App.css';
 import { useDataTable, useTable } from './index';
 

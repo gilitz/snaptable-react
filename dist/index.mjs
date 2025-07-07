@@ -1,106 +1,109 @@
-var k = Object.defineProperty;
-var D = (e, t, s) => t in e ? k(e, t, { enumerable: !0, configurable: !0, writable: !0, value: s }) : e[t] = s;
-var p = (e, t, s) => D(e, typeof t != "symbol" ? t + "" : t, s);
-import { makeAutoObservable as w } from "mobx";
-import { useRef as C, useCallback as S, useState as y, useLayoutEffect as W } from "react";
-import { useObserver as b } from "mobx-react";
-class I {
+var D = Object.defineProperty;
+var w = (e, t, s) => t in e ? D(e, t, { enumerable: !0, configurable: !0, writable: !0, value: s }) : e[t] = s;
+var g = (e, t, s) => w(e, typeof t != "symbol" ? t + "" : t, s);
+import { makeAutoObservable as C } from "mobx";
+import { useRef as S, useCallback as W, useState as v, useLayoutEffect as b } from "react";
+import { useObserver as I } from "mobx-react";
+class O {
   // nestedColumnsWidth?: ColumnWidthType[] | null;	 
-  constructor({ key: t, columns: s, saveLayoutView: r, hasDraggableColumns: h, isStickyHeader: o, onRowClick: d, defaultColumnWidth: n = "auto" }) {
-    p(this, "key");
-    p(this, "columns");
-    p(this, "saveLayoutView");
-    p(this, "hasDraggableColumns");
-    p(this, "isStickyHeader");
-    p(this, "onRowClick");
-    p(this, "columnsWidth");
-    w(this);
-    const l = JSON.parse(localStorage.getItem(t));
-    if (this.key = t, this.saveLayoutView = r ?? !1, this.hasDraggableColumns = h ?? !0, this.isStickyHeader = o ?? !1, this.onRowClick = d, this.columnsWidth = s.map((i) => {
-      const u = l == null ? void 0 : l.find(({ key: m }) => m === i.key), a = typeof n == "number" ? n : void 0;
-      return { key: i.key, width: (u == null ? void 0 : u.width) ?? i.width ?? a };
-    }), r)
-      if (l) {
-        const i = s.filter((m) => !l.map(({ key: c }) => c).includes(m.key)), u = l.reduce((m, c) => {
-          const g = s.find(({ key: f }) => f === c.key);
-          return g && (m = [...m, g]), m;
-        }, []), a = l.reduce((m, c) => {
-          const g = s.find(({ key: v }) => v === c.key);
-          if (!g)
-            return m;
-          const f = typeof n == "number" ? n : void 0;
-          return m = [...m, { key: g.key, width: c.width ?? g.width ?? f }], m;
+  constructor({ key: t, columns: s, saveLayoutView: c, hasDraggableColumns: m, isStickyHeader: r, onRowClick: a, defaultColumnWidth: i = "auto" }) {
+    g(this, "key");
+    g(this, "columns");
+    g(this, "saveLayoutView");
+    g(this, "hasDraggableColumns");
+    g(this, "isStickyHeader");
+    g(this, "onRowClick");
+    g(this, "columnsWidth");
+    C(this);
+    const d = localStorage.getItem(t), n = d ? JSON.parse(d) : null;
+    if (this.key = t, this.saveLayoutView = c ?? !1, this.hasDraggableColumns = m ?? !0, this.isStickyHeader = r ?? !1, this.onRowClick = a, this.columnsWidth = s.map((l) => {
+      const u = n == null ? void 0 : n.find(({ key: o }) => o === l.key), p = typeof i == "number" ? i : void 0;
+      return { key: l.key, width: (u == null ? void 0 : u.width) ?? l.width ?? p };
+    }), c)
+      if (n) {
+        const l = s.filter((o) => !n.map(({ key: h }) => h).includes(o.key)), u = n.reduce((o, h) => {
+          const f = s.filter(({ key: y }) => y === h.key)[0];
+          return f && (o = [...o, f]), o;
+        }, []), p = n.reduce((o, h) => {
+          const f = s.filter(({ key: k }) => k === h.key)[0];
+          if (!f)
+            return o;
+          const y = typeof i == "number" ? i : void 0;
+          return o = [...o, { key: f.key, width: h.width ?? f.width ?? y }], o;
         }, []);
-        this.columns = u.concat(i), this.columnsWidth = a.concat(i.map(({ key: m, width: c }) => ({ key: m, width: c ?? n })));
+        this.columns = u.concat(l), this.columnsWidth = p.concat(l.map(({ key: o, width: h }) => ({ key: o, width: h ?? i })));
       } else
         localStorage.setItem(t, JSON.stringify(this.columnsWidth)), this.columns = s;
     else
-      this.columns = s, l || localStorage.setItem(t, JSON.stringify(this.columnsWidth));
+      this.columns = s, n || localStorage.setItem(t, JSON.stringify(this.columnsWidth));
   }
   moveColumn(t, s) {
     if (!this.hasDraggableColumns)
       return;
-    const r = [...this.columns], h = r.splice(t, 1)[0];
-    r.splice(s, 0, h), this.columns = r;
-    const o = [...this.columnsWidth], d = o.splice(t, 1)[0];
-    o.splice(s, 0, d), this.columnsWidth = o;
-    const n = JSON.parse(localStorage.getItem(this.key)), l = n.splice(t, 1)[0];
-    n.splice(s, 0, l), localStorage.setItem(this.key, JSON.stringify(n));
+    const c = [...this.columns], m = c.splice(t, 1)[0];
+    c.splice(s, 0, m), this.columns = c;
+    const r = [...this.columnsWidth], a = r.splice(t, 1)[0];
+    r.splice(s, 0, a), this.columnsWidth = r;
+    const i = localStorage.getItem(this.key);
+    if (i) {
+      const d = JSON.parse(i), n = d.splice(t, 1)[0];
+      d.splice(s, 0, n), localStorage.setItem(this.key, JSON.stringify(d));
+    }
   }
   setColumnsWidth(t) {
     this.columnsWidth = t;
   }
 }
-const N = ({ key: e, columns: t, ...s }) => {
-  const r = C(null);
-  return r.current || (r.current = new I({ key: e, columns: t, ...s })), r.current;
+const J = ({ key: e, columns: t, ...s }) => {
+  const c = S(null);
+  return c.current || (c.current = new O({ key: e, columns: t, ...s })), c.current;
 };
-function J(e, t) {
-  const s = S((r, h, o) => {
-    const d = (l) => {
-      const i = l.clientX - h, u = Math.max(50, o + i), a = [...e.columnsWidth];
-      a[r] = {
-        ...a[r],
-        width: u
-      }, e.setColumnsWidth(a), e.saveLayoutView && localStorage.setItem(e.key, JSON.stringify(a));
-    }, n = () => {
-      document.removeEventListener("mousemove", d), document.removeEventListener("mouseup", n), document.body.style.cursor = "", document.body.style.userSelect = "";
+function M(e, t) {
+  const s = W((c, m, r) => {
+    const a = (d) => {
+      const n = d.clientX - m, l = Math.max(50, r + n), u = [...e.columnsWidth];
+      u[c] = {
+        ...u[c],
+        width: l
+      }, e.setColumnsWidth(u), e.saveLayoutView && localStorage.setItem(e.key, JSON.stringify(u));
+    }, i = () => {
+      document.removeEventListener("mousemove", a), document.removeEventListener("mouseup", i), document.body.style.cursor = "", document.body.style.userSelect = "";
     };
-    document.addEventListener("mousemove", d), document.addEventListener("mouseup", n), document.body.style.cursor = "col-resize", document.body.style.userSelect = "none";
+    document.addEventListener("mousemove", a), document.addEventListener("mouseup", i), document.body.style.cursor = "col-resize", document.body.style.userSelect = "none";
   }, [e]);
-  return b(() => {
-    const r = (o) => {
-      var l;
-      const d = e.columns[o], n = ((l = e.columnsWidth[o]) == null ? void 0 : l.width) || d.width || 150;
+  return I(() => {
+    const c = (r) => {
+      var d;
+      const a = e.columns[r], i = ((d = e.columnsWidth[r]) == null ? void 0 : d.width) || a.width || 150;
       return {
-        width: typeof n == "number" ? `${n}px` : n,
+        width: typeof i == "number" ? `${i}px` : i,
         isDraggable: e.hasDraggableColumns,
-        isResizable: d.resizeable,
-        onDragStart: (i) => {
-          var u;
-          e.hasDraggableColumns && ((u = i.dataTransfer) == null || u.setData("text/plain", o.toString()));
+        isResizable: a.resizeable,
+        onDragStart: (n) => {
+          var l;
+          e.hasDraggableColumns && ((l = n.dataTransfer) == null || l.setData("text/plain", r.toString()));
         },
-        onDragOver: (i) => {
-          i.preventDefault();
+        onDragOver: (n) => {
+          n.preventDefault();
         },
-        onDrop: (i) => {
-          var u;
-          if (i.preventDefault(), e.hasDraggableColumns) {
-            const a = parseInt(((u = i.dataTransfer) == null ? void 0 : u.getData("text/plain")) || "");
-            !isNaN(a) && a !== o && e.moveColumn(a, o);
+        onDrop: (n) => {
+          var l;
+          if (n.preventDefault(), e.hasDraggableColumns) {
+            const u = parseInt(((l = n.dataTransfer) == null ? void 0 : l.getData("text/plain")) || "");
+            !isNaN(u) && u !== r && e.moveColumn(u, r);
           }
         },
-        onResizeStart: (i) => {
-          if (d.resizeable) {
-            i.preventDefault(), i.stopPropagation();
-            const u = typeof n == "number" ? n : parseInt(n) || 150;
-            s(o, i.clientX, u);
+        onResizeStart: (n) => {
+          if (a.resizeable) {
+            n.preventDefault(), n.stopPropagation();
+            const l = typeof i == "number" ? i : parseInt(i) || 150;
+            s(r, n.clientX, l);
           }
         }
       };
-    }, h = (o) => ({
+    }, m = (r) => ({
       onClick: () => {
-        e.onRowClick && e.onRowClick({ item: o });
+        e.onRowClick && e.onRowClick({ item: r });
       }
     });
     return {
@@ -108,47 +111,47 @@ function J(e, t) {
       data: t,
       config: e,
       columnWidths: e.columnsWidth,
-      getColumnProps: r,
-      getRowProps: h
+      getColumnProps: c,
+      getRowProps: m
     };
   });
 }
-const M = (e, t) => {
-  const [s, r] = y(null), [h, o] = y(null), [d, n] = y(null);
+const E = (e, t) => {
+  const [s, c] = v(null), [m, r] = v(null), [a, i] = v(null);
   return {
     draggedItem: s,
-    draggedIndex: h,
-    hoveredIndex: d,
-    handleDragStart: (c, g) => {
-      r(c), o(g), e == null || e(c, g);
+    draggedIndex: m,
+    hoveredIndex: a,
+    handleDragStart: (o, h) => {
+      c(o), r(h), e == null || e(o, h);
     },
-    handleDragOver: (c) => {
-      c.preventDefault();
+    handleDragOver: (o) => {
+      o.preventDefault();
     },
-    handleDragEnter: (c) => {
-      n(c);
+    handleDragEnter: (o) => {
+      i(o);
     },
     handleDragLeave: () => {
-      n(null);
+      i(null);
     },
-    handleDrop: (c, g) => {
-      c.preventDefault(), h !== null && h !== g && (t == null || t(h, g)), r(null), o(null), n(null);
+    handleDrop: (o, h) => {
+      o.preventDefault(), m !== null && m !== h && (t == null || t(m, h)), c(null), r(null), i(null);
     }
   };
-}, E = (e, t) => {
-  W(() => {
+}, H = (e, t) => {
+  b(() => {
     const s = e == null ? void 0 : e.current;
     if (!s) return;
-    const r = new ResizeObserver((h) => {
-      const o = h[0];
-      o && t(o);
+    const c = new ResizeObserver((m) => {
+      const r = m[0];
+      r && t(r);
     });
-    return r.observe(s), () => r.disconnect();
+    return c.observe(s), () => c.disconnect();
   }, [e, t]);
 };
 export {
-  N as useDataTable,
-  M as useDragAndDrop,
-  E as useResizeObserver,
-  J as useTable
+  J as useDataTable,
+  E as useDragAndDrop,
+  H as useResizeObserver,
+  M as useTable
 };
