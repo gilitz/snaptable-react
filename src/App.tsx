@@ -333,12 +333,10 @@ function App() {
             The Ultimate Headless Table Library
           </p>
           
-          <p className="hero-description">
-            Build powerful, customizable data tables with zero UI constraints.
-            <div>
-              Pure hooks, complete control, endless possibilities.
-            </div>
-          </p>
+          <div className="hero-description">
+            <p>Build powerful, customizable data tables with zero UI constraints.</p>
+            <p>Pure hooks, complete control, endless possibilities.</p>
+          </div>
           
           <div className="hero-features">
             <div className="feature-pill">🎯 Truly Headless</div>
@@ -368,10 +366,10 @@ function App() {
           <h2 className="demo-title">
             <span className="gradient-text">Live Demo</span>
           </h2>
-          <p className="demo-description">
-            Try resizing columns and dragging to reorder. 
-            <div>This table is built entirely with SnapTable React hooks.</div>
-          </p>
+          <div className="demo-description">
+            <p>Try resizing columns and dragging to reorder.</p>
+            <p>This table is built entirely with SnapTable React hooks.</p>
+          </div>
         </div>
 
         <div className="table-container">

@@ -50,7 +50,7 @@ body {
 
 .hero-content {
   text-align: center;
-  max-width: 1000px;
+  max-width: 1060px;
   width: 100%;
   padding: 1rem;
   position: relative;
@@ -206,10 +206,19 @@ body {
   line-height: 1.7;
 }
 
+.hero-description p {
+  margin: 0;
+  margin-bottom: 0.5rem;
+}
+
+.hero-description p:last-child {
+  margin-bottom: 0;
+}
+
 .hero-features {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 0.75rem;
+  gap: 1rem;
   margin-bottom: 2rem;
   width: 100%;
   margin-left: auto;
@@ -228,6 +237,7 @@ body {
   text-align: center;
   align-content: center;
   height: 60px;
+  width: 160px;
 }
 
 .feature-pill:hover {
@@ -334,6 +344,15 @@ body {
   max-width: 700px;
   margin: 0 auto;
   line-height: 1.6;
+}
+
+.demo-description p {
+  margin: 0;
+  margin-bottom: 0.5rem;
+}
+
+.demo-description p:last-child {
+  margin-bottom: 0;
 }
 
 /* Table Container */
