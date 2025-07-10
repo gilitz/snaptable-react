@@ -1,6 +1,6 @@
 import { default as DataTable } from '../models/data-table-model';
 export declare function useTable<T extends Record<string, unknown>>(dataTable: DataTable, data: T[]): {
-    columns: any;
+    columns: import('../models/data-table-model').TableColumnType[];
     data: T[];
     config: DataTable;
     columnWidths: {
@@ -11,13 +11,17 @@ export declare function useTable<T extends Record<string, unknown>>(dataTable: D
         key: string;
         sticky: boolean;
     }[];
+    hiddenColumns: {
+        key: string;
+        hidden: boolean;
+    }[];
     stickyOffsets: {
         [key: string]: number;
     };
     getColumnProps: (index: number) => {
-        width: any;
+        width: string;
         isDraggable: boolean;
-        isResizable: any;
+        isResizable: boolean | undefined;
         isSticky: boolean;
         stickyOffset: number;
         onDragStart: (e: DragEvent) => void;
@@ -25,10 +29,11 @@ export declare function useTable<T extends Record<string, unknown>>(dataTable: D
         onDrop: (e: DragEvent) => void;
         onResizeStart: (e: MouseEvent, headerElement?: HTMLElement) => void;
         onToggleSticky: (headerElement?: HTMLElement) => void;
+        onToggleHidden: () => void;
         registerHeaderRef: (element: HTMLElement | null) => void;
     };
     getCellProps: (columnIndex: number) => {
-        width: any;
+        width: string;
         isSticky: boolean;
         stickyOffset: number;
     };
@@ -36,5 +41,7 @@ export declare function useTable<T extends Record<string, unknown>>(dataTable: D
         onClick: () => void;
     };
     updateActualWidths: () => void;
+    getHiddenColumns: () => import('../models/data-table-model').TableColumnType[];
+    toggleColumnHidden: (columnKey: string) => void;
 };
 export default useTable;

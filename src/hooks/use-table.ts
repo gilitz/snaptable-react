@@ -98,11 +98,13 @@ export function useTable<T extends Record<string, unknown>>(
 	}, [dataTable, updateActualWidths]);
 
 	return useObserver(() => {
+		const visibleColumns = dataTable.getVisibleColumns();
 		const stickyOffsets = dataTable.getStickyColumnsOffsets();
 		
 		const getColumnProps = (index: number) => {
-			const column = dataTable.columns[index];
-			const width = dataTable.columnsWidth[index]?.width ?? column.width ?? 150;
+			const column = visibleColumns[index];
+			const originalColumnIndex = dataTable.columns.findIndex((col: { key: string }) => col.key === column.key);
+			const width = dataTable.columnsWidth[originalColumnIndex]?.width ?? column.width ?? 150;
 			const isSticky = dataTable.stickyColumns.find((col: StickyColumnType) => col.key === column.key)?.sticky ?? false;
 			const stickyOffset = stickyOffsets[column.key] ?? 0;
 			
@@ -114,7 +116,7 @@ export function useTable<T extends Record<string, unknown>>(
 				stickyOffset: stickyOffset,
 				onDragStart: (e: DragEvent) => {
 					if (dataTable.hasDraggableColumns) {
-						e.dataTransfer?.setData('text/plain', index.toString());
+						e.dataTransfer?.setData('text/plain', originalColumnIndex.toString());
 					}
 				},
 				onDragOver: (e: DragEvent) => {
@@ -124,8 +126,8 @@ export function useTable<T extends Record<string, unknown>>(
 					e.preventDefault();
 					if (dataTable.hasDraggableColumns) {
 						const draggedIndex = parseInt(e.dataTransfer?.getData('text/plain') ?? '');
-						if (!isNaN(draggedIndex) && draggedIndex !== index) {
-							dataTable.moveColumn(draggedIndex, index);
+						if (!isNaN(draggedIndex) && draggedIndex !== originalColumnIndex) {
+							dataTable.moveColumn(draggedIndex, originalColumnIndex);
 							// Update actual widths after column move
 							setTimeout(() => updateActualWidths(), 50);
 						}
@@ -136,7 +138,7 @@ export function useTable<T extends Record<string, unknown>>(
 						e.preventDefault();
 						e.stopPropagation();
 						const currentWidth = typeof width === 'number' ? width : parseInt(width) ?? 150;
-						handleColumnResize(index, e.clientX, currentWidth, headerElement);
+						handleColumnResize(originalColumnIndex, e.clientX, currentWidth, headerElement);
 					}
 				},
 				onToggleSticky: (headerElement?: HTMLElement) => {
@@ -150,6 +152,9 @@ export function useTable<T extends Record<string, unknown>>(
 						setTimeout(() => updateActualWidths(), 50);
 					}
 				},
+				onToggleHidden: () => {
+					dataTable.toggleColumnHidden(column.key);
+				},
 				// New: function to register header element reference
 				registerHeaderRef: (element: HTMLElement | null) => {
 					registerHeaderElement(column.key, element);
@@ -158,8 +163,9 @@ export function useTable<T extends Record<string, unknown>>(
 		};
 
 		const getCellProps = (columnIndex: number) => {
-			const column = dataTable.columns[columnIndex];
-			const width = dataTable.columnsWidth[columnIndex]?.width ?? column.width ?? 150;
+			const column = visibleColumns[columnIndex];
+			const originalColumnIndex = dataTable.columns.findIndex((col: { key: string }) => col.key === column.key);
+			const width = dataTable.columnsWidth[originalColumnIndex]?.width ?? column.width ?? 150;
 			const isSticky = dataTable.stickyColumns.find((col: StickyColumnType) => col.key === column.key)?.sticky ?? false;
 			const stickyOffset = stickyOffsets[column.key] ?? 0;
 			
@@ -179,17 +185,21 @@ export function useTable<T extends Record<string, unknown>>(
 		});
 
 		return {
-			columns: dataTable.columns,
+			columns: visibleColumns,
 			data,
 			config: dataTable,
 			columnWidths: dataTable.columnsWidth,
 			stickyColumns: dataTable.stickyColumns,
+			hiddenColumns: dataTable.hiddenColumns,
 			stickyOffsets,
 			getColumnProps,
 			getCellProps,
 			getRowProps,
 			// New: function to manually trigger actual width updates
-			updateActualWidths
+			updateActualWidths,
+			// Hidden columns methods
+			getHiddenColumns: () => dataTable.getHiddenColumns(),
+			toggleColumnHidden: (columnKey: string) => dataTable.toggleColumnHidden(columnKey)
 		};
 	});
 }

@@ -1,6 +1,6 @@
 {
   "name": "snaptable-react",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -23,10 +23,10 @@
     "prepublishOnly": "npm run build"
   },
   "peerDependencies": {
-    "react": ">=16.8.0",
-    "react-dom": ">=16.8.0",
     "mobx": ">=6.0.0",
-    "mobx-react": ">=9.0.0"
+    "mobx-react": ">=9.0.0",
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0"
   },
   "devDependencies": {
     "@types/react": "^18.3.3",
@@ -37,13 +37,13 @@
     "eslint": "^8.57.0",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.7",
-    "typescript": "^5.2.2",
-    "vite": "^5.3.4",
-    "vite-plugin-dts": "^4.0.3",
     "mobx": "^6.13.1",
     "mobx-react": "^9.1.1",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "typescript": "^5.2.2",
+    "vite": "^5.3.4",
+    "vite-plugin-dts": "^4.0.3"
   },
   "description": "A truly headless React table library providing only hooks and logic for building custom tables. Features column resizing, drag & drop, and layout persistence with zero styling opinions.",
   "repository": {

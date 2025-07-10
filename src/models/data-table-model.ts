@@ -13,6 +13,7 @@ export type TableColumnType = {
 	width?: number;
 	resizeable?: boolean;
 	sticky?: boolean;
+	hidden?: boolean;
 	Cell: (props: { data: Record<string, unknown> }) => ReactNode;
 	nestedColumns?: NestedColumnType[];
 }
@@ -25,6 +26,11 @@ type ColumnWidthType = {
 type StickyColumnType = {
 	key: string;
 	sticky: boolean;
+}
+
+type HiddenColumnType = {
+	key: string;
+	hidden: boolean;
 }
 
 export interface DataTableLiteType {
@@ -45,6 +51,11 @@ export type DataTableType = DataTableLiteType & {
 	stickyColumns: StickyColumnType[];
 	setStickyColumns: (stickyColumns: StickyColumnType[]) => void;
 	toggleColumnSticky: (columnKey: string, actualWidth?: number) => void;
+	hiddenColumns: HiddenColumnType[];
+	setHiddenColumns: (hiddenColumns: HiddenColumnType[]) => void;
+	toggleColumnHidden: (columnKey: string) => void;
+	getVisibleColumns: () => TableColumnType[];
+	getHiddenColumns: () => TableColumnType[];
 	getStickyColumnsOffsets: () => { [key: string]: number };
 	updateActualWidths: (headerElements: { [key: string]: HTMLElement }) => void;
 	getColumnActualWidth: (columnKey: string, fallbackWidth: number) => number;
@@ -61,6 +72,7 @@ class DataTable {
 	onRowClick;
 	columnsWidth: ColumnWidthType[];
 	stickyColumns: StickyColumnType[];
+	hiddenColumns: HiddenColumnType[];
 	// nestedColumnsWidth?: ColumnWidthType[] | null;	 
 
 	// Store actual rendered widths from DOM elements
@@ -126,6 +138,16 @@ class DataTable {
 			return { key: column.key, sticky: savedStickyColumn?.sticky ?? column.sticky ?? false };
 		});
 
+		// Load saved hidden state
+		const savedHiddenStr = localStorage.getItem(`${key}_hidden`);
+		const savedHidden = savedHiddenStr ? JSON.parse(savedHiddenStr) : null;
+
+		// Initialize hidden columns state
+		this.hiddenColumns = columns.map((column) => {
+			const savedHiddenColumn = savedHidden?.find(({ key }: HiddenColumnType) => key === column.key);
+			return { key: column.key, hidden: savedHiddenColumn?.hidden ?? column.hidden ?? false };
+		});
+
 		// load initial view if exists and saveLayoutView is enabled
 		if (saveLayoutView) {
 			if (savedColumns) {
@@ -157,6 +179,12 @@ class DataTable {
 					const savedStickyColumn = savedSticky?.find(({ key }: StickyColumnType) => key === column.key);
 					return { key: column.key, sticky: savedStickyColumn?.sticky ?? column.sticky ?? false };
 				});
+
+				// Update hidden columns based on reordered columns
+				this.hiddenColumns = this.columns.map((column: TableColumnType) => {
+					const savedHiddenColumn = savedHidden?.find(({ key }: HiddenColumnType) => key === column.key);
+					return { key: column.key, hidden: savedHiddenColumn?.hidden ?? column.hidden ?? false };
+				});
 			}
 			else {
 				// Initialize localStorage with current column widths and sticky state
@@ -164,6 +192,7 @@ class DataTable {
 				if (this.hasStickyColumns) {
 					localStorage.setItem(`${key}_sticky`, JSON.stringify(this.stickyColumns));
 				}
+				localStorage.setItem(`${key}_hidden`, JSON.stringify(this.hiddenColumns));
 				this.columns = columns;
 			}
 		}
@@ -175,6 +204,9 @@ class DataTable {
 			}
 			if (this.hasStickyColumns && !savedSticky) {
 				localStorage.setItem(`${key}_sticky`, JSON.stringify(this.stickyColumns));
+			}
+			if (!savedHidden) {
+				localStorage.setItem(`${key}_hidden`, JSON.stringify(this.hiddenColumns));
 			}
 		}
 	}
@@ -213,6 +245,12 @@ class DataTable {
 		customStickyColumns.splice(toIndex, 0, stickyColumnItem);
 		this.stickyColumns = customStickyColumns;
 
+		// update hiddenColumns saved columns
+		const customHiddenColumns = [...this.hiddenColumns]
+		const hiddenColumnItem = customHiddenColumns.splice(index, 1)[0];
+		customHiddenColumns.splice(toIndex, 0, hiddenColumnItem);
+		this.hiddenColumns = customHiddenColumns;
+
 		// update localstorage saved columns
 		const savedColumnsStr = localStorage.getItem(this.key);
 		if (savedColumnsStr) {
@@ -226,6 +264,9 @@ class DataTable {
 		if (this.hasStickyColumns) {
 			localStorage.setItem(`${this.key}_sticky`, JSON.stringify(this.stickyColumns));
 		}
+
+		// update localstorage saved hidden state
+		localStorage.setItem(`${this.key}_hidden`, JSON.stringify(this.hiddenColumns));
 	}
 
 	setColumnsWidth(widths: ColumnWidthType[]) {
@@ -318,6 +359,32 @@ class DataTable {
 			}
 		}
 		return offsets;
+	}
+
+	setHiddenColumns(hiddenColumns: HiddenColumnType[]) {
+		this.hiddenColumns = hiddenColumns;
+		localStorage.setItem(`${this.key}_hidden`, JSON.stringify(this.hiddenColumns));
+	}
+
+	toggleColumnHidden(columnKey: string) {
+		const newHiddenColumns = this.hiddenColumns.map((col: HiddenColumnType) => 
+			col.key === columnKey ? { ...col, hidden: !col.hidden } : col
+		);
+		this.setHiddenColumns(newHiddenColumns);
+	}
+
+	getVisibleColumns(): TableColumnType[] {
+		return this.columns.filter((column: TableColumnType) => {
+			const isHidden = this.hiddenColumns.find((col: HiddenColumnType) => col.key === column.key)?.hidden ?? false;
+			return !isHidden;
+		});
+	}
+
+	getHiddenColumns(): TableColumnType[] {
+		return this.columns.filter((column: TableColumnType) => {
+			const isHidden = this.hiddenColumns.find((col: HiddenColumnType) => col.key === column.key)?.hidden ?? false;
+			return isHidden;
+		});
 	}
 }
 

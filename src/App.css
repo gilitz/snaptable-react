@@ -307,16 +307,15 @@ body {
 /* Demo Section */
 .demo-section {
   background: linear-gradient(180deg, #f8f9ff 0%, #ffffff 100%);
-  padding: 4rem 2rem;
+  padding: 2rem;
   position: relative;
   width: 100vw;
   min-height: 100vh;
 }
 
 .demo-header {
-  text-align: center;
-  margin-bottom: 3rem;
-  max-width: 800px;
+  width: 100%;
+  margin-bottom: 24px;
 }
 
 .demo-title {
@@ -345,8 +344,9 @@ body {
 .demo-description {
   font-size: clamp(1rem, 3vw, 1.2rem);
   color: #64748b;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 18px;
   max-width: 700px;
-  margin: 0 auto;
   line-height: 1.6;
 }
 
@@ -361,10 +361,15 @@ body {
 
 
 
-/* Table Container */
-.table-container {
+/* Table Wrapper */
+.table-wrapper {
   max-width: 1400px;
   margin: 0 auto;
+  position: relative;
+}
+
+/* Table Container */
+.table-container {
   background: white;
   border-radius: 12px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
@@ -403,7 +408,6 @@ body {
   padding: 1rem 0.75rem;
   font-weight: 600;
   text-align: left;
-  border-bottom: 2px solid #e5e7eb;
   position: relative;
   user-select: none;
   font-size: 0.875rem;
@@ -672,6 +676,7 @@ body {
 
 /* Status Badge */
 .status-badge {
+  width: fit-content;
   display: flex;
   align-items: center;
   gap: 0.375rem;
@@ -946,4 +951,159 @@ body {
 
 .table-container::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
-} 
+}
+
+/* Hidden columns dropdown */
+.hidden-columns-dropdown {
+  position: absolute;
+  top: -40px;
+  right: 0;
+  z-index: 9999;
+}
+
+/* Portal dropdown base styles */
+.dropdown-portal {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.hidden-columns-toggle {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.hidden-columns-toggle:hover:not(.disabled) {
+  background: white;
+  border-color: #667eea;
+  color: #667eea;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.hidden-columns-toggle.disabled {
+  background: rgba(255, 255, 255, 0.7);
+  border-color: #e0e0e0;
+  color: #999;
+  cursor: not-allowed;
+  opacity: 0.6;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.hidden-columns-toggle:disabled {
+  cursor: not-allowed;
+}
+
+.hidden-columns-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 4px;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  min-width: 130px;
+  z-index: 10000;
+  overflow: hidden;
+}
+
+.hidden-column-item {
+  display: block;
+  width: 100%;
+  padding: 10px 12px;
+  background: none;
+  border: none;
+  text-align: left;
+  font-size: 13px;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.hidden-column-item:hover {
+  background-color: #f8f9fa;
+}
+
+.hidden-column-item:not(:last-child) {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+/* Kebab menu styles */
+.kebab-menu {
+  position: relative;
+  display: inline-block;
+}
+
+.kebab-toggle {
+  background: none;
+  border: none;
+  font-size: 14px;
+  color: #666;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  line-height: 1;
+}
+
+.kebab-toggle:hover {
+  background-color: rgba(102, 126, 234, 0.1);
+  color: #667eea;
+}
+
+.kebab-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 4px;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  min-width: 120px;
+  z-index: 10000;
+  overflow: hidden;
+}
+
+.kebab-item {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  background: none;
+  border: none;
+  text-align: left;
+  font-size: 13px;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.kebab-item:hover {
+  background-color: #f8f9fa;
+}
+
+.kebab-item:not(:last-child) {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+/* Update header actions to accommodate kebab menu */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Remove old sticky-toggle styles since we're using kebab menu now */
+.sticky-toggle {
+  display: none;
+}

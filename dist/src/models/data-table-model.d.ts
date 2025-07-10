@@ -12,6 +12,7 @@ export type TableColumnType = {
     width?: number;
     resizeable?: boolean;
     sticky?: boolean;
+    hidden?: boolean;
     Cell: (props: {
         data: Record<string, unknown>;
     }) => ReactNode;
@@ -24,6 +25,10 @@ type ColumnWidthType = {
 type StickyColumnType = {
     key: string;
     sticky: boolean;
+};
+type HiddenColumnType = {
+    key: string;
+    hidden: boolean;
 };
 export interface DataTableLiteType {
     key: string;
@@ -44,6 +49,11 @@ export type DataTableType = DataTableLiteType & {
     stickyColumns: StickyColumnType[];
     setStickyColumns: (stickyColumns: StickyColumnType[]) => void;
     toggleColumnSticky: (columnKey: string, actualWidth?: number) => void;
+    hiddenColumns: HiddenColumnType[];
+    setHiddenColumns: (hiddenColumns: HiddenColumnType[]) => void;
+    toggleColumnHidden: (columnKey: string) => void;
+    getVisibleColumns: () => TableColumnType[];
+    getHiddenColumns: () => TableColumnType[];
     getStickyColumnsOffsets: () => {
         [key: string]: number;
     };
@@ -67,6 +77,7 @@ declare class DataTable {
     }) => void) | undefined;
     columnsWidth: ColumnWidthType[];
     stickyColumns: StickyColumnType[];
+    hiddenColumns: HiddenColumnType[];
     actualRenderedWidths: {
         [key: string]: number;
     };
@@ -82,5 +93,9 @@ declare class DataTable {
     getStickyColumnsOffsets(): {
         [key: string]: number;
     };
+    setHiddenColumns(hiddenColumns: HiddenColumnType[]): void;
+    toggleColumnHidden(columnKey: string): void;
+    getVisibleColumns(): TableColumnType[];
+    getHiddenColumns(): TableColumnType[];
 }
 export default DataTable;

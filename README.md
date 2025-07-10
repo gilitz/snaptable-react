@@ -1,4 +1,4 @@
-# SnapTable React v3.1.0
+# SnapTable React v3.2.0
 
 **A Truly Headless React Table Library**
 
@@ -148,6 +148,7 @@ tableState.getRowProps(item); // Get all props for a row
   Cell: ({ data, ...props }) => <td>{data.field}</td>,  // Cell renderer
   resizeable: true,                    // Enable column resizing
   sticky: false,                       // Make column sticky (requires hasStickyColumns: true)
+  hidden: false,                       // Start column hidden (optional)
   width: 200,                          // Initial width (optional)
   minWidth: 100,                       // Minimum width (optional)
   maxWidth: 500                        // Maximum width (optional)
@@ -312,6 +313,131 @@ function StickyTable() {
 }
 ```
 
+## 👁️ Show/Hide Columns
+
+Control column visibility dynamically with built-in state management and persistence.
+
+### Basic Show/Hide Setup
+
+```tsx
+const dataTable = useDataTable({
+  key: "my-table",
+  columns: [
+    {
+      key: "name",
+      label: "Name",
+      Cell: ({ data }) => <td>{data.name}</td>,
+      resizeable: true,
+    },
+    {
+      key: "email",
+      label: "Email",
+      Cell: ({ data }) => <td>{data.email}</td>,
+      resizeable: true,
+      hidden: true, // Start hidden
+    },
+    {
+      key: "phone",
+      label: "Phone",
+      Cell: ({ data }) => <td>{data.phone}</td>,
+      resizeable: true,
+    },
+  ],
+  saveLayoutView: true, // Persist hidden state
+});
+```
+
+### Implementing Show/Hide Controls
+
+```tsx
+function TableWithHideShow() {
+  const tableState = useTable(dataTable, data);
+
+  return (
+    <div>
+      {/* Hidden columns dropdown */}
+      <div className="hidden-columns-dropdown">
+        <button
+          className="show-hidden-btn"
+          disabled={tableState.getHiddenColumns().length === 0}
+        >
+          Show Hidden ({tableState.getHiddenColumns().length})
+        </button>
+        {tableState.getHiddenColumns().length > 0 && (
+          <div className="hidden-columns-menu">
+            {tableState.getHiddenColumns().map((column) => (
+              <button
+                key={column.key}
+                onClick={() => tableState.toggleColumnHidden(column.key)}
+              >
+                Show {column.label}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            {tableState.columns.map((column, index) => {
+              const props = tableState.getColumnProps(index);
+              return (
+                <th key={column.key} style={{ width: props.width }}>
+                  {column.label}
+                  {/* Hide column button */}
+                  <button
+                    onClick={() => props.onToggleHidden()}
+                    style={{ marginLeft: "8px" }}
+                  >
+                    🙈 Hide
+                  </button>
+                  {/* Resize handle */}
+                  {props.isResizable && (
+                    <div
+                      onMouseDown={(e) => props.onResizeStart(e.nativeEvent)}
+                      style={{
+                        position: "absolute",
+                        right: 0,
+                        top: 0,
+                        width: "5px",
+                        height: "100%",
+                        cursor: "col-resize",
+                      }}
+                    />
+                  )}
+                </th>
+              );
+            })}
+          </tr>
+        </thead>
+        <tbody>
+          {tableState.data.map((item) => {
+            const rowProps = tableState.getRowProps(item);
+            return (
+              <tr key={item.key} onClick={rowProps.onClick}>
+                {tableState.columns.map(({ key, Cell }) => (
+                  <Cell key={key} data={item} />
+                ))}
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+```
+
+### Show/Hide Features
+
+- **Hidden State Management** - Automatic state tracking for hidden columns
+- **Persistence** - Hidden states are saved to localStorage when `saveLayoutView` is enabled
+- **Dynamic Toggle** - Use `onToggleHidden()` to hide columns and `toggleColumnHidden()` to show them
+- **Hidden Columns List** - Get all hidden columns with `getHiddenColumns()`
+- **Flexible UI** - Build your own show/hide controls with complete styling control
+- **Integration** - Works seamlessly with sticky columns, resizing, and drag & drop
+
 ## 🎨 Styling Examples
 
 ### Basic Table
@@ -400,12 +526,43 @@ return (
 - **Column Reordering** - Drag & drop column headers to reorder
 - **Sticky Headers** - Keep headers visible while scrolling
 - **Sticky Columns** - Pin columns to the left side during horizontal scrolling
-- **Layout Persistence** - Save column widths, order, and sticky states to localStorage
+- **Show/Hide Columns** - Toggle column visibility with built-in state management
+- **Layout Persistence** - Save column widths, order, sticky states, and visibility to localStorage
 - **Row Click Handlers** - Handle row interactions
 - **Flexible Data** - Works with any data structure
 - **TypeScript** - Full TypeScript support with proper types
 - **Zero Dependencies** - No external dependencies except React
 - **Tiny Bundle** - Only the logic you need, no UI bloat
+
+## 📋 Changelog
+
+### v3.2.0 (Latest)
+
+**New Features:**
+
+- ✨ **Show/Hide Columns** - Toggle column visibility with built-in state management
+- 🔧 **Enhanced Layout Persistence** - Hidden column states are now saved to localStorage
+- 🎯 **Improved Developer Experience** - Better component architecture and naming conventions
+- 🐛 **Sticky Columns Fix** - Fixed z-index issues when sticky headers and sticky columns are used together
+
+**API Additions:**
+
+- `tableState.getHiddenColumns()` - Get array of hidden columns
+- `tableState.toggleColumnHidden(columnKey)` - Toggle specific column visibility
+- `props.onToggleHidden()` - Hide a column from column header
+- `column.hidden` - Set initial hidden state in column definition
+
+**Breaking Changes:**
+
+- None - fully backward compatible
+
+### v3.1.0
+
+**Features:**
+
+- 📌 Sticky columns functionality
+- 🔄 Enhanced drag & drop with sticky column constraints
+- 💾 Layout persistence improvements
 
 ## 🔄 Migration from v2.x
 
