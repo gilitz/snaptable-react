@@ -24,6 +24,7 @@ export declare function useTable<T extends Record<string, unknown>>(dataTable: D
         isResizable: boolean | undefined;
         isSticky: boolean;
         stickyOffset: number;
+        zIndex: number;
         onDragStart: (e: DragEvent) => void;
         onDragOver: (e: DragEvent) => void;
         onDrop: (e: DragEvent) => void;
@@ -36,6 +37,7 @@ export declare function useTable<T extends Record<string, unknown>>(dataTable: D
         width: string;
         isSticky: boolean;
         stickyOffset: number;
+        zIndex: number;
     };
     getRowProps: (item: T) => {
         onClick: () => void;

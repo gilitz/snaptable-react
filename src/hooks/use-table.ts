@@ -108,12 +108,35 @@ export function useTable<T extends Record<string, unknown>>(
 			const isSticky = dataTable.stickyColumns.find((col: StickyColumnType) => col.key === column.key)?.sticky ?? false;
 			const stickyOffset = stickyOffsets[column.key] ?? 0;
 			
+			// Calculate z-index for sticky columns based on their sticky position
+			let zIndex = 1;
+			if (isSticky) {
+				// Count how many sticky columns come before this one
+				let stickyIndex = 0;
+				for (let i = 0; i < index; i++) {
+					const prevColumn = visibleColumns[i];
+					const prevIsSticky = dataTable.stickyColumns.find((col: StickyColumnType) => col.key === prevColumn.key)?.sticky ?? false;
+					if (prevIsSticky) {
+						stickyIndex++;
+					}
+				}
+				// When both sticky header and sticky columns are active,
+				// sticky columns need higher z-index than sticky header (10)
+				// First sticky column gets highest z-index
+				const baseZIndex = dataTable.isStickyHeader ? 20 : 100;
+				zIndex = baseZIndex - stickyIndex;
+			} else if (dataTable.isStickyHeader) {
+				// Non-sticky columns in sticky header get base z-index
+				zIndex = 10;
+			}
+			
 			return {
 				width: typeof width === 'number' ? `${width}px` : width,
 				isDraggable: dataTable.hasDraggableColumns,
 				isResizable: column.resizeable,
 				isSticky: isSticky,
 				stickyOffset: stickyOffset,
+				zIndex: zIndex,
 				onDragStart: (e: DragEvent) => {
 					if (dataTable.hasDraggableColumns) {
 						e.dataTransfer?.setData('text/plain', originalColumnIndex.toString());
@@ -169,10 +192,30 @@ export function useTable<T extends Record<string, unknown>>(
 			const isSticky = dataTable.stickyColumns.find((col: StickyColumnType) => col.key === column.key)?.sticky ?? false;
 			const stickyOffset = stickyOffsets[column.key] ?? 0;
 			
+			// Calculate z-index for sticky cells based on their sticky position
+			let cellZIndex = 1;
+			if (isSticky) {
+				// Count how many sticky columns come before this one
+				let stickyIndex = 0;
+				for (let i = 0; i < columnIndex; i++) {
+					const prevColumn = visibleColumns[i];
+					const prevIsSticky = dataTable.stickyColumns.find((col: StickyColumnType) => col.key === prevColumn.key)?.sticky ?? false;
+					if (prevIsSticky) {
+						stickyIndex++;
+					}
+				}
+				// When both sticky header and sticky columns are active,
+				// sticky columns need higher z-index than sticky header (10)
+				// First sticky column gets highest z-index
+				const baseCellZIndex = dataTable.isStickyHeader ? 8 : 50;
+				cellZIndex = baseCellZIndex - stickyIndex;
+			}
+			
 			return {
 				width: typeof width === 'number' ? `${width}px` : width,
 				isSticky: isSticky,
 				stickyOffset: stickyOffset,
+				zIndex: cellZIndex,
 			};
 		};
 

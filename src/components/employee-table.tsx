@@ -71,27 +71,6 @@ export const EmployeeTable = () => {
                 const props = table.getColumnProps(index);
                 const isLastColumn = index === table.columns.length - 1;
                 
-                // Calculate z-index for sticky columns based on their sticky position
-                let zIndex = 1;
-                if (props.isSticky) {
-                  // Count how many sticky columns come before this one
-                  let stickyIndex = 0;
-                  for (let i = 0; i < index; i++) {
-                    const prevProps = table.getColumnProps(i);
-                    if (prevProps.isSticky) {
-                      stickyIndex++;
-                    }
-                  }
-                  // When both sticky header and sticky columns are active,
-                  // sticky columns need higher z-index than sticky header (10)
-                  // First sticky column gets highest z-index
-                  const baseZIndex = dataTable.isStickyHeader ? 20 : 100;
-                  zIndex = baseZIndex - stickyIndex;
-                } else if (dataTable.isStickyHeader) {
-                  // Non-sticky columns in sticky header get base z-index
-                  zIndex = 10;
-                }
-                
                 return (
                   <th
                     key={column.key}
@@ -104,7 +83,7 @@ export const EmployeeTable = () => {
                       width: props.width,
                       left: props.isSticky ? `${Math.floor(props.stickyOffset)}px` : undefined,
                       position: props.isSticky ? 'sticky' : 'relative',
-                      zIndex: zIndex,
+                      zIndex: props.zIndex,
                     }}
                     draggable={props.isDraggable}
                     onDragStart={props.onDragStart}
@@ -183,24 +162,6 @@ export const EmployeeTable = () => {
                     const cellProps = table.getCellProps(columnIndex);
                     const isLastColumn = columnIndex === table.columns.length - 1;
                     
-                    // Calculate z-index for sticky cells based on their sticky position
-                    let cellZIndex = 1;
-                    if (cellProps.isSticky) {
-                      // Count how many sticky columns come before this one
-                      let stickyIndex = 0;
-                      for (let i = 0; i < columnIndex; i++) {
-                        const prevCellProps = table.getCellProps(i);
-                        if (prevCellProps.isSticky) {
-                          stickyIndex++;
-                        }
-                      }
-                      // When both sticky header and sticky columns are active,
-                      // sticky columns need higher z-index than sticky header (10)
-                      // First sticky column gets highest z-index
-                      const baseCellZIndex = dataTable.isStickyHeader ? 8 : 50;
-                      cellZIndex = baseCellZIndex - stickyIndex;
-                    }
-                    
                     return (
                       <td
                         key={column.key}
@@ -209,7 +170,7 @@ export const EmployeeTable = () => {
                           width: cellProps.width,
                           left: cellProps.isSticky ? `${Math.floor(cellProps.stickyOffset)}px` : undefined,
                           position: cellProps.isSticky ? 'sticky' : 'relative',
-                          zIndex: cellZIndex,
+                          zIndex: cellProps.zIndex,
                         }}
                       >
                         <column.Cell data={employee} />

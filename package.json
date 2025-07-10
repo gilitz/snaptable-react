@@ -1,6 +1,6 @@
 {
   "name": "snaptable-react",
-  "version": "3.2.0",
+  "version": "3.3.0",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -13,7 +13,8 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "CHANGELOG.md"
   ],
   "scripts": {
     "dev": "vite",

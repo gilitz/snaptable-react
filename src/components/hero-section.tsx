@@ -3,7 +3,7 @@ export const HeroSection = () => {
     <section className="hero-section">
       <div className="hero-content">
         <div className="hero-badge">
-          <span className="version-badge">v3.2.0</span>
+          <span className="version-badge">v3.3.0</span>
           <span className="new-badge">✨ Truly Headless</span>
         </div>
         

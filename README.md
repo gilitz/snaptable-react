@@ -1,4 +1,4 @@
-# SnapTable React v3.2.0
+# SnapTable React v3.3.0
 
 **A Truly Headless React Table Library**
 
@@ -211,7 +211,7 @@ function StickyTable() {
                     width: props.width,
                     position: props.isSticky ? "sticky" : "relative",
                     left: props.isSticky ? `${props.stickyOffset}px` : "auto",
-                    zIndex: props.isSticky ? 10 : 1,
+                    zIndex: props.zIndex,
                     backgroundColor: props.isSticky ? "#f8f9fa" : "white",
                   }}
                   draggable={props.isDraggable}
@@ -262,7 +262,7 @@ function StickyTable() {
                         left: cellProps.isSticky
                           ? `${cellProps.stickyOffset}px`
                           : "auto",
-                        zIndex: cellProps.isSticky ? 5 : 1,
+                        zIndex: cellProps.zIndex,
                         backgroundColor: cellProps.isSticky
                           ? "#f8f9fa"
                           : "white",
@@ -534,16 +534,30 @@ return (
 - **Zero Dependencies** - No external dependencies except React
 - **Tiny Bundle** - Only the logic you need, no UI bloat
 
-## 📋 Changelog
+## 📋 Recent Changes
 
-### v3.2.0 (Latest)
+### v3.3.0 (Latest)
+
+**Developer Experience Improvements:**
+
+- 🎯 **Automated Z-Index Management** - Z-index calculations for sticky columns and headers are now handled automatically by the library
+- 🧹 **Cleaner User Code** - Users no longer need to implement complex z-index logic in their components
+- 📦 **Built-in Logic** - All sticky column layering logic is now internal to the hooks
+- 🔧 **Simplified Implementation** - Reduced boilerplate code for sticky column implementations
+
+**API Enhancements:**
+
+- `props.zIndex` - Column headers now include calculated z-index values
+- `cellProps.zIndex` - Table cells now include calculated z-index values
+- Automatic z-index calculation based on sticky column position and sticky header state
+
+### v3.2.0
 
 **New Features:**
 
 - ✨ **Show/Hide Columns** - Toggle column visibility with built-in state management
 - 🔧 **Enhanced Layout Persistence** - Hidden column states are now saved to localStorage
 - 🎯 **Improved Developer Experience** - Better component architecture and naming conventions
-- 🐛 **Sticky Columns Fix** - Fixed z-index issues when sticky headers and sticky columns are used together
 
 **API Additions:**
 
@@ -552,17 +566,9 @@ return (
 - `props.onToggleHidden()` - Hide a column from column header
 - `column.hidden` - Set initial hidden state in column definition
 
-**Breaking Changes:**
+---
 
-- None - fully backward compatible
-
-### v3.1.0
-
-**Features:**
-
-- 📌 Sticky columns functionality
-- 🔄 Enhanced drag & drop with sticky column constraints
-- 💾 Layout persistence improvements
+📖 **[View complete changelog](./CHANGELOG.md)** for all version history and detailed changes.
 
 ## 🔄 Migration from v2.x
 
